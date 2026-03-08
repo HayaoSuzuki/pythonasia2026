@@ -1,0 +1,513 @@
+\documentclass[aspectratio=169,dvipdfmx,11pt,notheorems]{beamer}
+%%%% 和文用 %%%%%
+\usepackage{bxdpx-beamer}
+\usepackage{pxjahyper}
+\usepackage{minijs}%和文用
+\renewcommand{\kanjifamilydefault}{\gtdefault}%和文用
+
+%%%% スライドの見た目 %%%%%
+\usetheme{Madrid}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{frametitle}[default][center]
+\setbeamertemplate{navigation symbols}{}
+\setbeamercovered{transparent}%好みに応じてどうぞ）
+\setbeamertemplate{blocks}[rounded]
+\useinnertheme{circles}
+\setbeamertemplate{footline}[page number]
+\setbeamerfont{footline}{size=\normalsize,series=\bfseries}
+\setbeamercolor{footline}{fg=black,bg=black}
+%%%%
+
+%%%% 定義環境 %%%%%
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}
+\newtheorem{definition}{定義}
+\newtheorem{proposition}{命題}
+\newtheorem{lemma}{補題}
+\newtheorem{corollary}{系}
+\newtheorem{conjecture}{予想}
+\newtheorem*{remark}{Remark}
+\renewcommand{\proofname}{}
+%%%%%%%%%
+
+%%%%% フォント基本設定 %%%%%
+\usepackage[T1]{fontenc}%8bit フォント
+\usepackage{textcomp}%欧文フォントの追加
+\usepackage[utf8]{inputenc}%文字コードをUTF-8
+\usepackage[deluxe]{otf}%otfパッケージ
+\usepackage{lxfonts}%数式・英文ローマン体を Lxfont にする
+\usepackage{bm}%数式太字
+%%%%%%%%%%
+
+%%%%% PythonTeX %%%%%
+\usepackage[makestderr]{pythontex}
+\restartpythontexsession{\thesection}
+
+\usepackage{ulem}
+ 
+\title{Let's implement useless Python objects}
+\author[Hayao]{Hayao Suzuki}
+\institute[PythonAsia 2026]{PythonAsia 2026 at DE LA SALLE UNIVERSITY, MALATE, MANILA}
+%\titlegraphic{\includegraphics[scale=0.2]{pyconlogo.png}}
+\date{March 21, 2026}
+
+\begin{document}
+
+\begin{frame}[plain]\frametitle{}
+\titlepage %表紙
+\end{frame}
+
+\begin{frame}\frametitle{Share it}
+
+\begin{block}{GitHub}
+\begin{itemize}
+\item \url{https://github.com/HayaoSuzuki/pythonasia2026}
+\end{itemize}
+\end{block}
+
+\begin{block}{Hashtag}
+\begin{itemize}
+\item \#PythonAsia2026
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\section{Self Intorduction}
+
+\begin{frame}\frametitle{Who am I ?}
+
+\begin{block}{お前誰よ}
+\begin{description}
+\item[Name] Hayao Suzuki（鈴木　駿）
+\item[\xout{Twitter} X] \href{https://twitter.com/CardinalXaro}{@CardinalXaro}
+\item[Work] Software Engineer at TOKYO GAS CO.,LTD
+\end{description}
+\end{block}
+
+\begin{block}{Abount Tokyo Gas}
+Tokyo Gas is the largest natural gas utility in Japan
+\begin{itemize}
+\item Production and sale of city gas, LNG sales, etc.
+\item Gas Pipeline Service Business、Supply of city gas
+\item Production, supply and sale of electricity
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}\frametitle{Who am I ?}
+
+\begin{block}{Transtation Books in Japanese}
+\begin{itemize}
+\item \structure{Effective Python 第3版}(O'Reilly Japan) \structure{New!}
+\item \structure{ハイパーモダンPython}(O'Reilly Japan)
+\item \structure{Python Distilled}(O'Reilly Japan)
+\end{itemize}
+\end{block}
+
+\begin{block}{Supervised Books in Japanese}
+\begin{itemize}
+\item \structure{ロバストPython}(O'Reilly Japan) 
+\item \structure{入門Python 3 第2版}(O'Reilly Japan)
+\item \structure{Pythonクイックリファレンス 第4版}(O'Reilly Japan)
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}\frametitle{Who am I ?}
+
+\begin{block}{Presentations of PyCon}
+\begin{itemize}
+\item \structure{明日からgraphlib、みんなで使おう}(PyCon JP 2025)
+\item \structure{Let's implement useless Python objects}(PyCon APAC 2023)
+\item \structure{組み込み関数powの知られざる進化}(PyCon JP 2021)
+\item \structure{インメモリーストリーム活用術}(PyCon JP 2020)
+\item \structure{君はcmathを知っているか}(PyCon mini Shizuoka 2020)
+\item \structure{Pythonと楽しむ初等整数論}(PyCon mini Hiroshima 2019)
+\item \structure{SymPyによる数式処理}(PyCon JP 2018)
+\end{itemize}
+\end{block}
+Listed at  \url{https://xaro.hatenablog.jp/}
+\end{frame}
+
+\section{Useless!}
+
+\begin{frame}\frametitle{Today's Theme}
+
+\begin{center}
+\huge{Let's implement \structure{useless} Python objects}
+\end{center}
+
+\end{frame}
+
+\begin{frame}\frametitle{What is it mean useless?}
+
+\begin{block}{From  Longman Dictionary of Contemporary English}
+\begin{enumerate}
+\item not useful or effective in any way
+\item (informal) unable or unwilling to do anything properly
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Is the useless object really useless?}
+
+\begin{block}{From Zhuangzi "The Human World"（荘子 人間世篇）}
+人皆知有用之用 而莫知無用之用也
+\end{block}
+Everyone knows the usefulness of the useful, but no one knows the usefulness of the useless.
+
+\end{frame}
+
+\begin{frame}\frametitle{Today's Theme}
+
+\begin{block}{Let's implement useless Python objects}
+The useless objects are useless, but \structure{how to make a useless object} is very useful.
+\end{block}
+
+\end{frame}
+
+\section{Basic useless Python objects}
+
+\begin{frame}[fragile]\frametitle{What is a useless Python object?}
+
+\begin{exampleblock}{Example: \texttt{LiarContainer}}
+\begin{pygments}{python}
+>>> c = LiarContainer(["spam", "egg", "bacon"])
+>>> "spam" in c
+False
+>>> "tomato" in c
+True
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+\begin{frame}[fragile]\frametitle{What is a useless Python object?}
+
+\begin{exampleblock}{Example: \texttt{FibonacciSized}}
+\begin{pygments}{python}
+>>> s = FibonacciSized(range(50))
+>>> len(s)
+12586269025
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{What is a useless Python object?}
+
+\begin{exampleblock}{Example: \texttt{ShuffledIterable}}
+\begin{pygments}{python}
+>>> it = ShuffledIterable([1, 2, 3, 4, 5])
+>>> for _ in range(3):
+...     for v in it:
+...         print(v, end=" ")
+...     print()
+...
+5 3 4 2 1 
+4 1 2 3 5 
+2 5 3 1 4
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}\frametitle{What is a useless Python object?}
+
+\begin{block}{Definition of a useless Python object in this talk}
+A useless Python object behave \structure{Pythonic}, but does not work as expected.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Structures and Operations}
+
+\begin{block}{Basic Data Structures of Python}
+\begin{description}
+\item[List] \pyv{[1, 4, 9, 16, 25, 36]}
+\item[Tuple] \pyv{("pen", "pineapple", "apple", "pen")}
+\item[Dictonary] \pyv{{"Answer": 42}}
+\item[Set] \pyv{{41, 43, 47, 53, 57, 59}}
+\end{description}
+\end{block}
+
+\begin{block}{Common Operations of Data Structure}
+\begin{description}
+\item[\texttt{len()}] Length of object
+\item[\texttt{in}] Membership test
+\item[\texttt{for}] Iteration
+\end{description}
+\end{block}
+
+\end{frame}
+
+%\begin{frame}[fragile]\frametitle{\texttt{Useless} Abstract Base Class}
+%
+%\begin{exampleblock}{Example: \texttt{Useless} ABC}
+%\begin{pygments}{python}
+%class Useless(abc.ABC):
+%    def __init__(self, data: Optional[Iterable] = None):
+%        if data is not None:
+%            self._data = [v for v in data]
+%        else:
+%            self._data = []
+%\end{pygments}
+%\end{exampleblock}
+%\texttt{Useless} abstract base is useful, contrary to its name.
+%\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{in} and \texttt{Container}}
+
+\begin{block}{\texttt{object.\_\_contains\_\_()}}
+Called to implement membership test operators.
+\end{block}
+
+\begin{exampleblock}{Example: \texttt{LiarContainer}}
+\begin{pygments}{python}
+class LiarContainer(Container):
+    def __contains__(self, item) -> bool:
+        return item not in self._data
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{len()} and \texttt{Sized}}
+
+\begin{block}{\texttt{object.\_\_len\_\_()}}
+Called to implement the built-in function \texttt{len()}.
+\end{block}
+
+\begin{exampleblock}{Example: \texttt{FibonacciSized}}
+\begin{pygments}{python}
+class FibonacciSized(Sized):
+    PHI: Final[float] = (1 + math.sqrt(5)) / 2
+    def __len__(self) -> int:
+        return math.floor(
+            (1 / math.sqrt(5)) 
+            * pow(self.PHI, len(self._data))
+            + (1 / 2)
+        )
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{for} and \texttt{Iterable}}
+
+\begin{block}{\texttt{object.\_\_iter\_\_()}}
+Called when an iterator is required for a container. 
+\end{block}
+
+\begin{exampleblock}{Example: \texttt{ShuffledIterable}}
+\begin{pygments}{python}
+class ShuffledIterable(Iterable):
+    def __iter__(self) -> Iterator:
+        return iter(
+            random.sample(self._data, k=len(self._data))
+        )
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}\frametitle{Object Protocols}
+
+\begin{block}{How to implement Pythonic Python objects}
+We need to understand \structure{object protocols}.
+\end{block}
+Ref: \url{https://docs.python.org/3/reference/datamodel.html}
+
+\end{frame}
+
+\begin{frame}\frametitle{\texttt{collections.abc}}
+
+\begin{block}{\texttt{collections.abc}}
+This module provides \structure{abstract base classes} that can be used to test whether a class provides \structure{a particular interface}.
+\end{block}
+From \url{https://docs.python.org/3/library/collections.abc.html}
+
+\end{frame}
+
+\begin{frame}\frametitle{\texttt{collections.abc}}
+
+\begin{exampleblock}{\texttt{collections.abc} and Interface}
+\begin{table}[h]
+\centering
+\begin{tabular}{lcr}
+\hline
+ABC  & Interface \\
+\hline
+\texttt{Sized}  & \texttt{\_\_len\_\_()} \\
+\texttt{Container}  & \texttt{\_\_contains\_\_()} \\
+\texttt{Iterable}  &  \texttt{\_\_iter\_\_()} \\
+\texttt{Collection}  & \texttt{Sized}, \texttt{Container}, \texttt{Iterable}  \\
+\hline
+\end{tabular}
+\end{table}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Collection}}
+
+\begin{block}{\texttt{collections.abc.Collection}}
+\texttt{Sized} and \texttt{Container} and \texttt{Iterable}
+\end{block}
+
+\begin{exampleblock}{Example: \texttt{Collection}}
+\begin{pygments}{python}
+class UselessCollection(
+    FibonacciSized, LiarContainer, ShuffledIterable
+):
+    pass
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}\frametitle{\texttt{collections.abc}}
+
+\section{Pratical useless Python objects}
+
+\begin{exampleblock}{\texttt{collections.abc} and Built-in Objects}
+\begin{table}[h]
+\centering
+\begin{tabular}{lcr}
+\hline
+ABC  & built-in objects \\
+\hline
+\texttt{Sequence}  & \texttt{tuple} \\
+\texttt{MutableSequence}  & \texttt{list} \\
+\texttt{MutableSet}  &  \texttt{set} \\
+\texttt{MutableMapping}  & \texttt{dict}  \\
+\hline
+\end{tabular}
+\end{table}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile,shrink=10]\frametitle{\texttt{Sequence}}
+
+\begin{exampleblock}{Example: \texttt{ModularSequence}}
+\begin{pygments}{python}
+class ModularSequence(Sequence):
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self._data[key % len(self._data)]
+        elif isinstance(key, slice):
+            s = slice(
+                key.start % len(self._data),
+                key.stop % len(self._data),
+                key.step,
+            )
+            return self._data[s]
+        else:
+            raise TypeError
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Sequence}}
+
+\begin{exampleblock}{Example: \texttt{ModularSequence}}
+\begin{pygments}{python}
+>>> seq = ModularSequence(range(20))
+>>> print(seq[21:44])
+[1, 2, 3]
+>>> print(seq[65543])
+3
+>>> seq.count(13) # It does not stop.
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Mapping}}
+
+\begin{exampleblock}{Example: \texttt{MisprintedDictionary}}
+\begin{pygments}{python}
+class MisprintedDictionary(Mapping):
+    def __init__(self, _dict: dict):
+        shuffled_keys = random.sample(
+            list(_dict.keys()), k=len(_dict.keys())
+        )
+        shuffled_values = random.sample(
+            list(_dict.values()), k=len(_dict.keys())
+        )
+        self._data = dict(
+            zip(shuffled_keys, shuffled_values)
+        )
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Mapping}}
+
+\begin{exampleblock}{Example: \texttt{MisprintedDictionary}}
+\begin{pygments}{python}
+>>> d = MisprintedDictionary({"a": 1, "b": 2, "c": 3})
+>>> for key in d:
+...     print(f"d[{key}]={d[key]}", end=" ")
+...
+d[c]=1 d[b]=2 d[a]=3
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Set}}
+
+\begin{exampleblock}{Example: \texttt{CrowdSet}}
+\begin{pygments}{python}
+@functools.total_ordering
+class CrowdSet(Set):
+    def __init__(self, data=None):
+        if data is not None:
+            self._data = set(v for v in data)
+        else:
+            self._data = set()
+
+    def __lt__(self, other):
+        return self._data >= other
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Set}}
+
+\begin{exampleblock}{Example: \texttt{CrowdSet}}
+\begin{pygments}{python}
+>>> s = CrowdSet(("egg", "bacon", "spam"))
+>>> t = CrowdSet(("egg", "egg", "spam", "spam"))
+>>> s > t
+True
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}\frametitle{Conclusion}
+
+\begin{block}{Let's implement useless Python objects}
+\begin{itemize}
+\item Useless Python objects are useful
+\item \texttt{collections.abc} module is very useful
+\item Once you understand object protocol, you can do anything
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+\end{document}
