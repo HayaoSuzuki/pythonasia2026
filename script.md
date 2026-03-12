@@ -32,7 +32,7 @@ If you want to share on social media, please use the hashtag #PythonAsia2026.
 
 Let me introduce myself quickly.
 
-My name is Hayao Suzuki. You can find me on X as @CardinalXaro.
+My name is Hayao Suzuki. You can find me on X as follows.
 
 I work as a software engineer at Tokyo Gas. Tokyo Gas is the largest natural gas company in Japan. We provide city gas, LNG, and electricity.
 
