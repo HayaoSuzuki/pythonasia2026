@@ -471,15 +471,15 @@ class ModularSequence(Sequence):
     def __getitem__(self, key):
         if isinstance(key, int):
             return self._data[key % len(self._data)]
-        elif isinstance(key, slice):
+        if isinstance(key, slice):
+            n = len(self._data)
             s = slice(
-                key.start % len(self._data),
-                key.stop % len(self._data),
+                key.start % n if key.start is not None else None,
+                key.stop % n if key.stop is not None else None,
                 key.step,
             )
             return self._data[s]
-        else:
-            raise TypeError
+        raise TypeError
 \end{pygments}
 \end{exampleblock}
 
@@ -542,12 +542,12 @@ d[c]=1 d[b]=2 d[a]=3
 class CrowdSet(Set):
     def __init__(self, data=None):
         if data is not None:
-            self._data = set(v for v in data)
+            self._data = set(data)
         else:
             self._data = set()
 
     def __lt__(self, other):
-        return self._data >= other
+        return self._data >= other._data
 \end{pygments}
 \end{exampleblock}
 
