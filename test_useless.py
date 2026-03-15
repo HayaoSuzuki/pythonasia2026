@@ -25,16 +25,10 @@ def fib(n: int) -> int:
     return math.floor((1 / math.sqrt(5)) * pow(PHI, n) + 0.5)
 
 
-# --- LiarContainer ---
-
-
 @given(data=st.lists(st.integers()), x=st.integers())
 def test_liar_container(data, x):
     obj = LiarContainer(data)
     assert (x in obj) == (x not in data)
-
-
-# --- FibonacciSized ---
 
 
 @given(data=st.lists(st.integers(), max_size=20))
@@ -43,16 +37,10 @@ def test_fibonacci_sized(data):
     assert len(obj) == fib(len(data))
 
 
-# --- ShuffledIterable ---
-
-
 @given(data=st.lists(st.integers()))
 def test_shuffled_iterable(data):
     obj = ShuffledIterable(data)
     assert sorted(obj) == sorted(data)
-
-
-# --- EmptyIterable ---
 
 
 @given(data=st.lists(st.integers()))
@@ -61,16 +49,10 @@ def test_empty_iterable(data):
     assert list(obj) == []
 
 
-# --- FixedIterable ---
-
-
 @given(data=st.lists(st.integers()))
 def test_fixed_iterable(data):
     obj = FixedIterable(data)
     assert list(obj) == ["Do NOT iterate me !"]
-
-
-# --- ReversedReversible ---
 
 
 @given(data=st.lists(st.integers()))
@@ -85,18 +67,12 @@ def test_reversed_reversible_iter(data):
     assert sorted(obj) == sorted(data)
 
 
-# --- UselessCollection ---
-
-
 @given(data=st.lists(st.integers(), max_size=20), x=st.integers())
 def test_useless_collection(data, x):
     obj = UselessCollection(data)
     assert len(obj) == fib(len(data))
     assert (x in obj) == (x not in data)
     assert sorted(obj) == sorted(data)
-
-
-# --- ModularSequence ---
 
 
 @given(data=st.lists(st.integers(), min_size=1, max_size=20))
@@ -143,9 +119,6 @@ def test_modular_sequence_slice(data):
     assert obj[1:] == data[1:]
 
 
-# --- CompetitionSequence ---
-
-
 @given(data=st.lists(st.integers()))
 def test_competition_sequence_iter(data):
     obj = CompetitionSequence(data)
@@ -169,9 +142,6 @@ def test_competition_sequence_len(data):
 def test_competition_sequence_contains(data, x):
     obj = CompetitionSequence(data)
     assert (x in obj) == (x in data)
-
-
-# --- CrowdSet ---
 
 
 @given(data=st.lists(st.integers()))
@@ -213,9 +183,6 @@ def test_crowd_set_contains(data, x):
     assert (x in obj) == (x in set(data))
 
 
-# --- MisprintedDictionary ---
-
-
 @given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
 def test_misprinted_dictionary_keys(d):
     obj = MisprintedDictionary(d)
@@ -240,9 +207,6 @@ def test_misprinted_dictionary_getitem(d):
     original_values = sorted(d.values())
     actual_values = sorted(obj[k] for k in obj)
     assert actual_values == original_values
-
-
-# --- fib cross-check ---
 
 
 @given(n=st.integers(min_value=0, max_value=70))
