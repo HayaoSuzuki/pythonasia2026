@@ -39,7 +39,7 @@ class FibonacciSized(Sized):
         return str(self._data)
 
     def __len__(self) -> int:
-        return math.floor((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)) + (1 / 2))
+        return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
 
 
 class LiarContainer(Container[Any]):
@@ -100,10 +100,7 @@ class EmptyIterable(Iterable[Any]):
     """
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
-        if data is not None:
-            self._data = [v for v in data]
-        else:
-            self._data = []
+        pass
 
     def __iter__(self) -> Iterator[Any]:
         return iter(())
@@ -117,10 +114,7 @@ class FixedIterable(Iterable[Any]):
     """
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
-        if data is not None:
-            self._data = [v for v in data]
-        else:
-            self._data = []
+        pass
 
     def __iter__(self) -> Iterator[Any]:
         return iter(("Do NOT iterate me !",))
@@ -215,7 +209,7 @@ class ModularSequence(Sequence[Any]):
         raise TypeError
 
     def __len__(self) -> int:
-        return math.floor((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)) + (1 / 2))
+        return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
 
     def __reversed__(self) -> Iterator[Any]:
         return iter(self._data)
@@ -317,7 +311,7 @@ class MisprintedDictionary(Mapping[str, Any]):
         shuffled_keys = random.sample(list(_dict.keys()), k=len(_dict.keys()))
         shuffled_values = random.sample(list(_dict.values()), k=len(_dict.keys()))
 
-        self._data = dict(zip(shuffled_keys, shuffled_values, strict=False))
+        self._data = dict(zip(shuffled_keys, shuffled_values, strict=True))
 
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
@@ -326,7 +320,7 @@ class MisprintedDictionary(Mapping[str, Any]):
         return iter(self._data)
 
     def __len__(self) -> int:
-        return math.floor((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)) + (1 / 2))
+        return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
 
     def __repr__(self) -> str:
         return repr(self._data)

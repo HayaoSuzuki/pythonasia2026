@@ -16,6 +16,7 @@ from useless import (
     UselessCollection,
 )
 
+
 def fib(n: int) -> int:
     a, b = 0, 1
     for _ in range(n):
@@ -29,6 +30,13 @@ def test_liar_container(data, x):
     assert (x in obj) == (x not in data)
 
 
+@given(data=st.lists(st.integers()))
+def test_liar_container_repr_str(data):
+    obj = LiarContainer(data)
+    assert repr(obj) == repr(data)
+    assert str(obj) == str(data)
+
+
 @given(data=st.lists(st.integers(), max_size=20))
 def test_fibonacci_sized(data):
     obj = FibonacciSized(data)
@@ -36,9 +44,27 @@ def test_fibonacci_sized(data):
 
 
 @given(data=st.lists(st.integers()))
+def test_fibonacci_sized_str(data):
+    obj = FibonacciSized(data)
+    assert str(obj) == str(data)
+
+
+@given(data=st.lists(st.integers()))
 def test_shuffled_iterable(data):
     obj = ShuffledIterable(data)
     assert sorted(obj) == sorted(data)
+
+
+def test_shuffled_iterable_default():
+    obj = ShuffledIterable()
+    assert list(obj) == []
+
+
+@given(data=st.lists(st.integers()))
+def test_shuffled_iterable_repr_str(data):
+    obj = ShuffledIterable(data)
+    assert repr(obj) == repr(data)
+    assert str(obj) == str(data)
 
 
 @given(data=st.lists(st.integers()))
@@ -51,6 +77,18 @@ def test_empty_iterable(data):
 def test_fixed_iterable(data):
     obj = FixedIterable(data)
     assert list(obj) == ["Do NOT iterate me !"]
+
+
+def test_reversed_reversible_default():
+    obj = ReversedReversible()
+    assert list(reversed(obj)) == []
+    assert list(obj) == []
+
+
+@given(data=st.lists(st.integers()))
+def test_reversed_reversible_repr(data):
+    obj = ReversedReversible(data)
+    assert repr(obj) == repr(data)
 
 
 @given(data=st.lists(st.integers()))
@@ -71,6 +109,13 @@ def test_useless_collection(data, x):
     assert len(obj) == fib(len(data))
     assert (x in obj) == (x not in data)
     assert sorted(obj) == sorted(data)
+
+
+@given(data=st.lists(st.integers(), min_size=1, max_size=20))
+def test_modular_sequence_repr_str(data):
+    obj = ModularSequence(data)
+    assert repr(obj) == repr(data)
+    assert str(obj) == str(data)
 
 
 @given(data=st.lists(st.integers(), min_size=1, max_size=20))
@@ -115,6 +160,27 @@ def test_modular_sequence_slice(data):
     # None start/stop (obj[1:] and obj[:1]) should not crash
     assert obj[:1] == data[:1]
     assert obj[1:] == data[1:]
+
+
+@given(data=st.lists(st.integers(), min_size=4, max_size=20))
+def test_modular_sequence_slice_step(data):
+    obj = ModularSequence(data)
+    n = len(data)
+    assert obj[0:3:2] == data[0:3:2]
+    assert obj[0 : n - 1 : 2] == data[0 : (n - 1) % n : 2]
+
+
+def test_competition_sequence_default():
+    obj = CompetitionSequence()
+    assert list(obj) == []
+    assert len(obj) == 0
+
+
+@given(data=st.lists(st.integers()))
+def test_competition_sequence_repr_str(data):
+    obj = CompetitionSequence(data)
+    assert repr(obj) == repr(data)
+    assert str(obj) == str(data)
 
 
 @given(data=st.lists(st.integers()))
@@ -181,6 +247,12 @@ def test_crowd_set_contains(data, x):
     assert (x in obj) == (x in set(data))
 
 
+@given(d=st.dictionaries(st.text(), st.integers(), min_size=1, max_size=20))
+def test_misprinted_dictionary_repr(d):
+    obj = MisprintedDictionary(d)
+    assert repr(obj) != repr(None)
+
+
 @given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
 def test_misprinted_dictionary_keys(d):
     obj = MisprintedDictionary(d)
@@ -205,5 +277,3 @@ def test_misprinted_dictionary_getitem(d):
     original_values = sorted(d.values())
     actual_values = sorted(obj[k] for k in obj)
     assert actual_values == original_values
-
-
