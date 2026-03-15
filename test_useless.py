@@ -1,5 +1,3 @@
-import math
-
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
@@ -18,11 +16,11 @@ from useless import (
     UselessCollection,
 )
 
-PHI = (1 + math.sqrt(5)) / 2
-
-
 def fib(n: int) -> int:
-    return math.floor((1 / math.sqrt(5)) * pow(PHI, n) + 0.5)
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
 
 
 @given(data=st.lists(st.integers()), x=st.integers())
@@ -209,14 +207,3 @@ def test_misprinted_dictionary_getitem(d):
     assert actual_values == original_values
 
 
-@given(n=st.integers(min_value=0, max_value=70))
-def test_fib_cross_check(n):
-    """ビネの公式と反復フィボナッチが一致することを確認"""
-
-    def fib_iter(m):
-        a, b = 0, 1
-        for _ in range(m):
-            a, b = b, a + b
-        return a
-
-    assert fib(n) == fib_iter(n)
