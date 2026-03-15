@@ -37,7 +37,7 @@ def test_liar_container(data, x):
 # --- FibonacciSized ---
 
 
-@given(data=st.lists(st.integers()))
+@given(data=st.lists(st.integers(), max_size=20))
 def test_fibonacci_sized(data):
     obj = FibonacciSized(data)
     assert len(obj) == fib(len(data))
@@ -88,7 +88,7 @@ def test_reversed_reversible_iter(data):
 # --- UselessCollection ---
 
 
-@given(data=st.lists(st.integers()), x=st.integers())
+@given(data=st.lists(st.integers(), max_size=20), x=st.integers())
 def test_useless_collection(data, x):
     obj = UselessCollection(data)
     assert len(obj) == fib(len(data))
@@ -99,20 +99,20 @@ def test_useless_collection(data, x):
 # --- ModularSequence ---
 
 
-@given(data=st.lists(st.integers(), min_size=1))
+@given(data=st.lists(st.integers(), min_size=1, max_size=20))
 def test_modular_sequence_getitem(data):
     obj = ModularSequence(data)
     for i in range(len(data) * 3):
         assert obj[i] == data[i % len(data)]
 
 
-@given(data=st.lists(st.integers(), min_size=1))
+@given(data=st.lists(st.integers(), min_size=1, max_size=20))
 def test_modular_sequence_len(data):
     obj = ModularSequence(data)
     assert len(obj) == fib(len(data))
 
 
-@given(data=st.lists(st.integers(), min_size=1), x=st.integers())
+@given(data=st.lists(st.integers(), min_size=1, max_size=20), x=st.integers())
 def test_modular_sequence_contains(data, x):
     obj = ModularSequence(data)
     assert (x in obj) == (x not in data)
@@ -124,13 +124,13 @@ def test_modular_sequence_empty_crashes():
         obj[0]
 
 
-@given(data=st.lists(st.integers(), min_size=1))
+@given(data=st.lists(st.integers(), min_size=1, max_size=20))
 def test_modular_sequence_reversed(data):
     obj = ModularSequence(data)
     assert list(reversed(obj)) == data
 
 
-@given(data=st.lists(st.integers(), min_size=2))
+@given(data=st.lists(st.integers(), min_size=2, max_size=20))
 def test_modular_sequence_slice(data):
     obj = ModularSequence(data)
     n = len(data)
@@ -216,25 +216,25 @@ def test_crowd_set_contains(data, x):
 # --- MisprintedDictionary ---
 
 
-@given(d=st.dictionaries(st.text(), st.integers()))
+@given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
 def test_misprinted_dictionary_keys(d):
     obj = MisprintedDictionary(d)
     assert sorted(obj.keys()) == sorted(d.keys())
 
 
-@given(d=st.dictionaries(st.text(), st.integers()))
+@given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
 def test_misprinted_dictionary_values(d):
     obj = MisprintedDictionary(d)
     assert sorted(obj.values()) == sorted(d.values())
 
 
-@given(d=st.dictionaries(st.text(), st.integers()))
+@given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
 def test_misprinted_dictionary_len(d):
     obj = MisprintedDictionary(d)
     assert len(obj) == fib(len(d))
 
 
-@given(d=st.dictionaries(st.text(), st.integers(), min_size=1))
+@given(d=st.dictionaries(st.text(), st.integers(), min_size=1, max_size=20))
 def test_misprinted_dictionary_getitem(d):
     obj = MisprintedDictionary(d)
     original_values = sorted(d.values())

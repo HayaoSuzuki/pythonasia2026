@@ -15,7 +15,7 @@ class FibonacciSized(collections.abc.Sized):
 
     PHI: typing.Final[float] = (1 + math.sqrt(5)) / 2
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
@@ -31,7 +31,7 @@ class FibonacciSized(collections.abc.Sized):
         return math.floor((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)) + (1 / 2))
 
 
-class LiarContainer(collections.abc.Container):
+class LiarContainer(collections.abc.Container[typing.Any]):
     """Container that lies about membership.
 
     >>> obj = LiarContainer(("egg", "bacon", "spam"))
@@ -41,7 +41,7 @@ class LiarContainer(collections.abc.Container):
     True
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
@@ -53,11 +53,11 @@ class LiarContainer(collections.abc.Container):
     def __str__(self) -> str:
         return str(self._data)
 
-    def __contains__(self, item) -> bool:
+    def __contains__(self, item: object) -> bool:
         return item not in self._data
 
 
-class ShuffledIterable(collections.abc.Iterable):
+class ShuffledIterable(collections.abc.Iterable[typing.Any]):
     """Iterable that yields elements in random order.
 
     >>> obj = ShuffledIterable((1, 2, 3, 4, 5))
@@ -65,7 +65,7 @@ class ShuffledIterable(collections.abc.Iterable):
     [1, 2, 3, 4, 5]
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
@@ -77,45 +77,45 @@ class ShuffledIterable(collections.abc.Iterable):
     def __str__(self) -> str:
         return str(self._data)
 
-    def __iter__(self) -> collections.abc.Iterator:
+    def __iter__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(random.sample(self._data, k=len(self._data)))
 
 
-class EmptyIterable(collections.abc.Iterable):
+class EmptyIterable(collections.abc.Iterable[typing.Any]):
     """Iterable that always yields nothing.
 
     >>> list(EmptyIterable([3, 4, 1, 2, 3]))
     []
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
             self._data = []
 
-    def __iter__(self) -> collections.abc.Iterator:
-        return iter(tuple())
+    def __iter__(self) -> collections.abc.Iterator[typing.Any]:
+        return iter(())
 
 
-class FixedIterable(collections.abc.Iterable):
+class FixedIterable(collections.abc.Iterable[typing.Any]):
     """Iterable that always yields a fixed message.
 
     >>> list(FixedIterable([4, 1, 2, 3, 0]))
     ['Do NOT iterate me !']
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
             self._data = []
 
-    def __iter__(self) -> collections.abc.Iterator:
+    def __iter__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(("Do NOT iterate me !",))
 
 
-class ReversedReversible(collections.abc.Reversible):
+class ReversedReversible(collections.abc.Reversible[typing.Any]):
     """Reversible that returns elements in original order when reversed.
 
     >>> obj = ReversedReversible((1, 2, 3))
@@ -123,7 +123,7 @@ class ReversedReversible(collections.abc.Reversible):
     [1, 2, 3]
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
@@ -135,10 +135,10 @@ class ReversedReversible(collections.abc.Reversible):
     def __str__(self) -> str:
         return str(self._data)
 
-    def __iter__(self) -> collections.abc.Iterator:
+    def __iter__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(random.sample(self._data, k=len(self._data)))
 
-    def __reversed__(self):
+    def __reversed__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(self._data)
 
 
@@ -156,8 +156,7 @@ class UselessCollection(FibonacciSized, LiarContainer, ShuffledIterable):
     """
 
 
-
-class ModularSequence(collections.abc.Sequence):
+class ModularSequence(collections.abc.Sequence[typing.Any]):
     """Sequence with modular indexing, Fibonacci length, and lying containment.
 
     >>> seq = ModularSequence(range(20))
@@ -173,7 +172,7 @@ class ModularSequence(collections.abc.Sequence):
 
     PHI: typing.Final[float] = (1 + math.sqrt(5)) / 2
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
@@ -185,13 +184,13 @@ class ModularSequence(collections.abc.Sequence):
     def __str__(self) -> str:
         return str(self._data)
 
-    def __contains__(self, item) -> bool:
+    def __contains__(self, item: object) -> bool:
         return item not in self._data
 
     # def __iter__(self) -> collections.abc.Iterator:
     #     return iter(random.sample(self._data, k=len(self._data)))
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int | slice) -> typing.Any:
         if isinstance(key, int):
             return self._data[key % len(self._data)]
         if isinstance(key, slice):
@@ -207,11 +206,11 @@ class ModularSequence(collections.abc.Sequence):
     def __len__(self) -> int:
         return math.floor((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)) + (1 / 2))
 
-    def __reversed__(self):
+    def __reversed__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(self._data)
 
 
-class CompetitionSequence(collections.abc.Sequence):
+class CompetitionSequence(collections.abc.Sequence[typing.Any]):
     """Sequence whose iteration order is shuffled but indexing is normal.
 
     >>> s = CompetitionSequence("abcdefg")
@@ -223,7 +222,7 @@ class CompetitionSequence(collections.abc.Sequence):
     ['a', 'b', 'c', 'd', 'e', 'f', 'g']
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
         if data is not None:
             self._data = [v for v in data]
         else:
@@ -235,18 +234,18 @@ class CompetitionSequence(collections.abc.Sequence):
     def __str__(self) -> str:
         return str(self._data)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int | slice) -> typing.Any:
         return self._data[index]
 
-    def __iter__(self):
+    def __iter__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(random.sample(self._data, k=len(self._data)))
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._data)
 
 
 @functools.total_ordering
-class CrowdSet(collections.abc.Set):
+class CrowdSet(collections.abc.Set[typing.Any]):
     """A set with crowd mentality: exaggerates its size and reverses ordering.
 
     >>> s = CrowdSet(("egg", "bacon", "spam"))
@@ -257,9 +256,10 @@ class CrowdSet(collections.abc.Set):
     9
     """
 
-    def __init__(self, data: collections.abc.Iterable | None = None):
+    def __init__(self, data: collections.abc.Iterable[typing.Any] | None = None) -> None:
+        self._data: set[typing.Any]
         if data is not None:
-            self._data = set(v for v in data)
+            self._data = set(data)
         else:
             self._data = set()
 
@@ -269,26 +269,26 @@ class CrowdSet(collections.abc.Set):
     def __str__(self) -> str:
         return str(self._data)
 
-    def __lt__(self, other):
+    def __lt__(self, other: CrowdSet) -> bool:  # type: ignore[override]
         return self._data >= other._data
 
-    def __contains__(self, item) -> bool:
+    def __contains__(self, item: object) -> bool:
         return item in self._data
 
-    def __iter__(self) -> collections.abc.Iterator:
+    def __iter__(self) -> collections.abc.Iterator[typing.Any]:
         return iter(self._data)
 
     def __len__(self) -> int:
         return len(self._data) ** 2
 
-    def __and__(self, other):
+    def __and__(self, other: CrowdSet) -> CrowdSet:  # type: ignore[override]
         return CrowdSet(self._data | other._data)
 
-    def __or__(self, other):
+    def __or__(self, other: CrowdSet) -> CrowdSet:  # type: ignore[override]
         return CrowdSet(self._data & other._data)
 
 
-class MisprintedDictionary(collections.abc.Mapping):
+class MisprintedDictionary(collections.abc.Mapping[str, typing.Any]):
     """Mapping that shuffles both keys and values independently.
 
     >>> d = MisprintedDictionary({"a": 1, "b": 2, "c": 3})
@@ -302,16 +302,16 @@ class MisprintedDictionary(collections.abc.Mapping):
 
     PHI: typing.Final[float] = (1 + math.sqrt(5)) / 2
 
-    def __init__(self, _dict: dict):
+    def __init__(self, _dict: dict[str, typing.Any]) -> None:
         shuffled_keys = random.sample(list(_dict.keys()), k=len(_dict.keys()))
         shuffled_values = random.sample(list(_dict.values()), k=len(_dict.keys()))
 
-        self._data = dict(zip(shuffled_keys, shuffled_values))
+        self._data = dict(zip(shuffled_keys, shuffled_values, strict=False))
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> typing.Any:
         return self._data[key]
 
-    def __iter__(self) -> collections.abc.Iterator:
+    def __iter__(self) -> collections.abc.Iterator[str]:
         return iter(self._data)
 
     def __len__(self) -> int:

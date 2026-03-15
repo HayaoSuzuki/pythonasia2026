@@ -5,5 +5,65 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "hypothesis>=6.151.9",
+    "mypy>=1.19.1",
     "pygments>=2.19.2",
+    "pytest>=9.0.2",
+    "ruff>=0.15.6",
 ]
+
+[tool.ruff]
+fix = true
+lint.fixable = ["ALL"]
+lint.ignore = [
+    "ANN001",   # missing-type-function-argument
+    "ANN201",   # missing-return-type-undocumented-public-function
+    "ANN202",   # missing-return-type-private-function
+    "ANN401",   # dynamically-typed-expressions (typing.Any needed for mypy)
+    "C416",     # unnecessary-comprehension
+    "COM812",   # missing-trailing-comma (formatter conflict)
+    "D100",     # undocumented-public-module
+    "D103",     # undocumented-public-function
+    "D105",     # undocumented-magic-method
+    "D107",     # undocumented-public-init
+    "D203",     # incorrect-blank-line-before-class (D211 conflict)
+    "D213",     # multi-line-summary-second-line (D212 conflict)
+    "D400",     # ends-in-period
+    "D415",     # ends-in-punctuation
+    "E501",     # line-too-long
+    "ERA001",   # commented-out-code
+    "ISC001",   # single-line-implicit-string-concatenation (formatter conflict)
+    "S101",     # assert (needed in tests)
+]
+lint.select = ["ALL"]
+target-version = "py314"
+
+[tool.ruff.lint.per-file-ignores]
+"test_*.py" = ["D"]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
+
+[tool.mypy]
+strict = true
+warn_unreachable = true
+warn_no_return = true
+ignore_missing_imports = true
+disallow_untyped_decorators = false
+enable_error_code = [
+    "truthy-bool",
+    "truthy-iterable",
+    "ignore-without-code",
+    "deprecated",
+    "unused-awaitable",
+    "unimported-reveal",
+    "exhaustive-match",
+    "possibly-undefined",
+    "redundant-expr",
+]
+python_version = "3.14"
+
+[[tool.mypy.overrides]]
+module = "test_useless"
+disallow_untyped_defs = false
+disallow_untyped_calls = false
