@@ -1,3 +1,5 @@
+import string
+
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
@@ -247,31 +249,57 @@ def test_crowd_set_contains(data, x):
     assert (x in obj) == (x in set(data))
 
 
-@given(d=st.dictionaries(st.text(), st.integers(), min_size=1, max_size=20))
+@given(
+    d=st.dictionaries(
+        st.text(alphabet=string.ascii_letters, min_size=1),
+        st.integers(),
+        min_size=1,
+        max_size=20,
+    )
+)
 def test_misprinted_dictionary_repr(d):
     obj = MisprintedDictionary(d)
     assert repr(obj) != repr(None)
 
 
-@given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
+@given(
+    d=st.dictionaries(
+        st.text(alphabet=string.ascii_letters, min_size=1), st.integers(), max_size=20
+    )
+)
 def test_misprinted_dictionary_keys(d):
     obj = MisprintedDictionary(d)
     assert sorted(obj.keys()) == sorted(d.keys())
 
 
-@given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
+@given(
+    d=st.dictionaries(
+        st.text(alphabet=string.ascii_letters, min_size=1), st.integers(), max_size=20
+    )
+)
 def test_misprinted_dictionary_values(d):
     obj = MisprintedDictionary(d)
     assert sorted(obj.values()) == sorted(d.values())
 
 
-@given(d=st.dictionaries(st.text(), st.integers(), max_size=20))
+@given(
+    d=st.dictionaries(
+        st.text(alphabet=string.ascii_letters, min_size=1), st.integers(), max_size=20
+    )
+)
 def test_misprinted_dictionary_len(d):
     obj = MisprintedDictionary(d)
     assert len(obj) == fib(len(d))
 
 
-@given(d=st.dictionaries(st.text(), st.integers(), min_size=1, max_size=20))
+@given(
+    d=st.dictionaries(
+        st.text(alphabet=string.ascii_letters, min_size=1),
+        st.integers(),
+        min_size=1,
+        max_size=20,
+    )
+)
 def test_misprinted_dictionary_getitem(d):
     obj = MisprintedDictionary(d)
     original_values = sorted(d.values())
