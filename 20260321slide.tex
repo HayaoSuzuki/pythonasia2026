@@ -125,33 +125,6 @@ Tokyo Gas is the largest natural gas utility in Japan
 
 \begin{frame}\frametitle{Who am I ?}
 
-\begin{block}{Translation Books in Japanese}
-\begin{itemize}
-\item \structure{Effective Python 第3版}(O'Reilly Japan) \structure{New!}
-\item \structure{ハイパーモダンPython}(O'Reilly Japan)
-\item \structure{Python Distilled}(O'Reilly Japan)
-\end{itemize}
-\end{block}
-
-\begin{block}{Supervised Books in Japanese}
-\begin{itemize}
-\item \structure{ロバストPython}(O'Reilly Japan) 
-\item \structure{入門Python 3 第2版}(O'Reilly Japan)
-\item \structure{Pythonクイックリファレンス 第4版}(O'Reilly Japan)
-\end{itemize}
-\end{block}
-\includemedia[
-  addresource=voice/slide04.wav,
-  flashvars={
-    source=voice/slide04.wav
-   &autoPlay=true
-  },
-  transparent
-]{\color{blue}{\tiny\fbox{Play}}}{APlayer.swf}
-\end{frame}
-
-\begin{frame}\frametitle{Who am I ?}
-
 \begin{block}{Presentations of PyCon}
 \begin{itemize}
 \item \structure{明日からgraphlib、みんなで使おう}(PyCon JP 2025)
@@ -386,6 +359,27 @@ class ShuffledIterable(Iterable):
 
 \end{frame}
 
+\begin{frame}[fragile]\frametitle{\texttt{reversed()} and \texttt{Reversible}}
+
+\begin{block}{\texttt{object.\_\_reversed\_\_()}}
+Called to implement the built-in function \texttt{reversed()}.
+\end{block}
+
+\begin{exampleblock}{Example: \texttt{ReversedReversible}}
+\begin{pygments}{python}
+class ReversedReversible(Reversible):
+    def __iter__(self) -> Iterator:
+        return iter(
+            random.sample(self._data, k=len(self._data))
+        )
+
+    def __reversed__(self) -> Iterator:
+        return iter(self._data)
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
 \begin{frame}\frametitle{Object Protocols}
 
 \begin{block}{How to implement Pythonic Python objects}
@@ -416,6 +410,7 @@ ABC  & Interface \\
 \texttt{Sized}  & \texttt{\_\_len\_\_()} \\
 \texttt{Container}  & \texttt{\_\_contains\_\_()} \\
 \texttt{Iterable}  &  \texttt{\_\_iter\_\_()} \\
+\texttt{Reversible}  &  \texttt{\_\_reversed\_\_()} \\
 \texttt{Collection}  & \texttt{Sized}, \texttt{Container}, \texttt{Iterable}  \\
 \hline
 \end{tabular}

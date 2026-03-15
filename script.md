@@ -38,19 +38,7 @@ I work as a software engineer at Tokyo Gas. Tokyo Gas is the largest natural gas
 
 ---
 
-## Slide 4: Who am I? - Books (1:40 - 2:20) ~40s
-
-I translate Python books into Japanese.
-
-Recently, I translated "Effective Python, Third Edition" for O'Reilly Japan. This is the newest one.
-
-I also translated "Hypermodern Python" and "Python Distilled."
-
-And I supervised the Japanese editions of "Robust Python," "Introducing Python," and "Python in a Nutshell."
-
----
-
-## Slide 5: Who am I? - Presentations (2:20 - 3:00) ~40s
+## Slide 4: Who am I? - Presentations (1:40 - 2:20) ~40s
 
 I have given many talks at PyCon events.
 
@@ -62,7 +50,7 @@ OK, that's enough about me. Let's get started!
 
 ---
 
-## Slide 6: Today's Theme (3:00 - 3:40) ~40s
+## Slide 5: Today's Theme (2:20 - 3:00) ~40s
 
 Today's theme is:
 
@@ -76,7 +64,7 @@ Let me explain.
 
 ---
 
-## Slide 7: What does "useless" mean? (3:40 - 5:20) ~100s
+## Slide 6: What does "useless" mean? (3:00 - 4:40) ~100s
 
 So, what does "useless" mean?
 
@@ -100,7 +88,7 @@ Sounds fun, right?
 
 ---
 
-## Slide 8: Is the useless object really useless? (5:20 - 7:40) ~140s
+## Slide 7: Is the useless object really useless? (4:40 - 7:00) ~140s
 
 But wait. Is "useless" really useless?
 
@@ -134,7 +122,7 @@ So making useless things is actually a very good way to learn. The useless teach
 
 ---
 
-## Slide 9: Today's Theme - Key Message (7:40 - 9:00) ~80s
+## Slide 8: Today's Theme - Key Message (7:00 - 8:20) ~80s
 
 And this is the key message of today's talk.
 
@@ -156,7 +144,7 @@ Remember this idea. Let's keep it in mind as we go through the examples.
 
 ---
 
-## Slide 10: LiarContainer Example (9:00 - 9:45) ~45s
+## Slide 9: LiarContainer Example (8:20 - 9:05) ~45s
 
 OK, let me show you some examples of useless objects.
 
@@ -174,7 +162,7 @@ It always lies! That's why it's called LiarContainer.
 
 ---
 
-## Slide 11: FibonacciSized Example (9:45 - 10:15) ~30s
+## Slide 10: FibonacciSized Example (9:05 - 9:35) ~30s
 
 Next is FibonacciSized.
 
@@ -186,7 +174,7 @@ It returns a Fibonacci number instead of the real length.
 
 ---
 
-## Slide 12: ShuffledIterable Example (10:15 - 10:50) ~35s
+## Slide 11: ShuffledIterable Example (9:35 - 10:10) ~35s
 
 And this is ShuffledIterable.
 
@@ -200,7 +188,7 @@ You never get the same order twice!
 
 ---
 
-## Slide 13: Definition (10:50 - 12:00) ~70s
+## Slide 12: Definition (10:10 - 11:20) ~70s
 
 So, what is a "useless Python object"? Let me give a definition.
 
@@ -220,7 +208,7 @@ That's what we will explore in the rest of this talk.
 
 ---
 
-## Slide 14: Data Structures and Operations (12:00 - 14:00) ~120s
+## Slide 13: Data Structures and Operations (11:20 - 13:20) ~120s
 
 Let's start with Python's basic data structures.
 
@@ -250,7 +238,7 @@ Let me show you how.
 
 ---
 
-## Slide 15: `in` and Container (14:00 - 15:20) ~80s
+## Slide 14: `in` and Container (13:20 - 14:40) ~80s
 
 First, the `in` operator and the Container class.
 
@@ -272,7 +260,7 @@ One line of code makes it completely useless. Simple and fun.
 
 ---
 
-## Slide 16: `len()` and Sized (15:20 - 16:20) ~60s
+## Slide 15: `len()` and Sized (14:40 - 15:40) ~60s
 
 Next, `len()` and the Sized class.
 
@@ -288,7 +276,7 @@ So if your data has 50 items, `len()` returns the 50th Fibonacci number. That's 
 
 ---
 
-## Slide 17: `for` and Iterable (16:20 - 17:20) ~60s
+## Slide 16: `for` and Iterable (15:40 - 16:40) ~60s
 
 And the `for` loop with the Iterable class.
 
@@ -303,6 +291,26 @@ In `__iter__`, it uses `random.sample` to shuffle all items. It returns a new ra
 [Pause]
 
 So now we have three basic useless objects. Each one breaks one operation. Let's go deeper.
+
+---
+
+## Slide 17: `reversed()` and Reversible (16:40 - 17:20) ~40s
+
+And here is a fun twist: ReversedReversible.
+
+It inherits from Reversible.
+
+[Pause]
+
+Normal iteration is shuffled, just like ShuffledIterable.
+
+But when you call reversed, it returns the original order.
+
+[Pause]
+
+So the "reversed" version is actually the correct one. The normal way is broken, but reversing it fixes everything.
+
+This connects to Zhuangzi's idea. Sometimes the "wrong" way is the right way.
 
 ---
 
@@ -328,9 +336,9 @@ We already used Container, Sized, and Iterable. These all come from `collections
 
 Here is a summary table.
 
-Sized needs `__len__`. Container needs `__contains__`. Iterable needs `__iter__`.
+Sized needs `__len__`. Container needs `__contains__`. Iterable needs `__iter__`. Reversible needs `__reversed__`.
 
-And Collection combines all three.
+And Collection combines Sized, Container, and Iterable.
 
 [Pause]
 
@@ -496,11 +504,11 @@ Are there any questions?
 | Section | Slides | Time |
 |---|---|---|
 | Title & Share | 1-2 | 1 min |
-| Self Introduction | 3-5 | 2 min |
-| What is "useless" & why it matters | 6-9 | 6 min |
-| Useless Python object examples | 10-13 | 3 min |
-| Data Structures & Operations | 14 | 2 min |
-| Container / Sized / Iterable | 15-17 | 3.5 min |
+| Self Introduction | 3-4 | 1.5 min |
+| What is "useless" & why it matters | 5-8 | 6 min |
+| Useless Python object examples | 9-12 | 3 min |
+| Data Structures & Operations | 13 | 2 min |
+| Container / Sized / Iterable / Reversible | 14-17 | 4 min |
 | Object Protocols & collections.abc | 18-21 | 2.5 min |
 | Sequence / Mapping / Set | 22-28 | 5.5 min |
 | Conclusion | 29 | 2 min |
