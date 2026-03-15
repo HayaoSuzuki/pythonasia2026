@@ -372,7 +372,7 @@ The key method is `__getitem__`. This is called when you use square brackets, li
 
 [Pause]
 
-Look at the code. When you access an index, it uses modular arithmetic: `key % len(self._data)`.
+Look at the code. When you access an index, it uses modular arithmetic: `key` mod `len(self._data)`.
 
 So the index wraps around. If the data has 20 items, index 0 and index 20 give the same result. Index 21 is the same as index 1.
 
@@ -432,7 +432,7 @@ It also uses `functools.total_ordering`.
 
 The trick is in `__lt__` — the less-than method.
 
-Instead of checking `self._data <= other`, it checks `self._data >= other`.
+Instead of checking `self._data` less than or equal to `other._data`, it checks `self._data` greater than or equal to `other._data`.
 
 The comparison is reversed! Bigger sets are "less than" smaller sets.
 
@@ -445,7 +445,7 @@ Here is the result.
 `s` has 3 unique items: "egg", "bacon", "spam."
 `t` has 2 unique items: "egg" and "spam." Remember, sets remove duplicates.
 
-`s > t` returns True. But with CrowdSet's reversed logic, this means s has **more** elements.
+`s` greater than `t` returns True. But with CrowdSet's reversed logic, this means s has **more** elements.
 
 It's called CrowdSet because the more crowded set thinks it is smaller.
 
