@@ -120,11 +120,13 @@ class TestModularSequence:
         assert repr(obj) == repr(data)
         assert str(obj) == str(data)
 
-    @given(data=st.lists(st.integers(), min_size=1, max_size=20))
-    def test_getitem(self, data):
+    @given(
+        data=st.lists(st.integers(), min_size=1, max_size=20),
+        i=st.integers(min_value=0, max_value=1000),
+    )
+    def test_getitem(self, data, i):
         obj = ModularSequence(data)
-        for i in range(len(data) * 3):
-            assert obj[i] == data[i % len(data)]
+        assert obj[i] == data[i % len(data)]
 
     @given(data=st.lists(st.integers(), min_size=1, max_size=20))
     def test_len(self, data):
@@ -146,24 +148,28 @@ class TestModularSequence:
         obj = ModularSequence(data)
         assert list(reversed(obj)) == data
 
-    @given(data=st.lists(st.integers(), min_size=2, max_size=20))
-    def test_slice(self, data):
+    @given(
+        data=st.lists(st.integers(), min_size=2, max_size=20),
+        start=st.none() | st.integers(min_value=0, max_value=100),
+        stop=st.none() | st.integers(min_value=0, max_value=100),
+    )
+    def test_slice(self, data, start, stop):
         obj = ModularSequence(data)
         n = len(data)
-        # stop wraps via modulo: n % n == 0, so obj[0:n] is empty
-        assert obj[0:n] == []
-        # a valid sub-range works with modular indices
-        assert obj[0:1] == data[0:1]
-        # None start/stop (obj[1:] and obj[:1]) should not crash
-        assert obj[:1] == data[:1]
-        assert obj[1:] == data[1:]
+        expected_start = start % n if start is not None else None
+        expected_stop = stop % n if stop is not None else None
+        assert obj[start:stop] == data[expected_start:expected_stop]
 
-    @given(data=st.lists(st.integers(), min_size=4, max_size=20))
-    def test_slice_step(self, data):
+    @given(
+        data=st.lists(st.integers(), min_size=2, max_size=20),
+        start=st.integers(min_value=0, max_value=100),
+        stop=st.integers(min_value=0, max_value=100),
+        step=st.integers(min_value=1, max_value=5),
+    )
+    def test_slice_step(self, data, start, stop, step):
         obj = ModularSequence(data)
         n = len(data)
-        assert obj[0:3:2] == data[0:3:2]
-        assert obj[0 : n - 1 : 2] == data[0 : (n - 1) % n : 2]
+        assert obj[start:stop:step] == data[start % n : stop % n : step]
 
 
 class TestCompetitionSequence:
@@ -183,11 +189,14 @@ class TestCompetitionSequence:
         obj = CompetitionSequence(data)
         assert list(obj) == list(reversed(data))
 
-    @given(data=st.lists(st.integers(), min_size=1))
-    def test_getitem(self, data):
+    @given(
+        data=st.lists(st.integers(), min_size=1),
+        i=st.integers(min_value=0, max_value=100),
+    )
+    def test_getitem(self, data, i):
         obj = CompetitionSequence(data)
-        for i in range(len(data)):
-            assert obj[i] == data[i]
+        idx = i % len(data)
+        assert obj[idx] == data[idx]
 
     @given(data=st.lists(st.integers()))
     def test_len(self, data):
