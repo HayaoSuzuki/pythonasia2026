@@ -260,7 +260,7 @@ The `__len__` method is called for the built-in `len()` function.
 
 FibonacciSized inherits from Sized.
 
-Instead of returning the real length, it calculates a Fibonacci number. It uses the golden ratio formula — PHI to the power of the real length.
+Instead of returning the real length, it calculates a Fibonacci number. 
 
 So if your data has 50 items, `len()` returns the 50th Fibonacci number. That's 12 billion!
 
@@ -318,7 +318,7 @@ And Python gives us a very useful tool: the `collections.abc` module.
 
 This module provides **abstract base classes**. They define the interface for different types of collections.
 
-We already used Container, Sized, and Iterable. These all come from `collections.abc`.
+We already used Container, Sized, Iterable, and Reversible. These all come from `collections.abc`.
 
 ---
 
