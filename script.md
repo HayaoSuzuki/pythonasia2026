@@ -284,23 +284,23 @@ So now we have three basic useless objects. Each one breaks one operation. Let's
 
 ---
 
-## Slide 17: `reversed()` and Reversible (16:40 - 17:20) ~40s
-
-And here is a fun twist: ReversedReversible.
-
-It inherits from Reversible.
-
-[Pause]
-
-Normal iteration returns elements in **reversed** order.
-
-But when you call reversed, it returns the original order.
-
-[Pause]
-
-So the "reversed" version is actually the correct one. The normal way is broken, but reversing it fixes everything.
-
-This connects to Zhuangzi's idea. Sometimes the "wrong" way is the right way.
+[//]: # (## Slide 17: `reversed&#40;&#41;` and Reversible &#40;16:40 - 17:20&#41; ~40s)
+[//]: # ()
+[//]: # (And here is a fun twist: ReversedReversible.)
+[//]: # ()
+[//]: # (It inherits from Reversible.)
+[//]: # ()
+[//]: # ([Pause])
+[//]: # ()
+[//]: # (Normal iteration returns elements in **reversed** order.)
+[//]: # ()
+[//]: # (But when you call reversed, it returns the original order.)
+[//]: # ()
+[//]: # ([Pause])
+[//]: # ()
+[//]: # (So the "reversed" version is actually the correct one. The normal way is broken, but reversing it fixes everything.)
+[//]: # ()
+[//]: # (This connects to Zhuangzi's idea. Sometimes the "wrong" way is the right way.)
 
 ---
 
@@ -318,7 +318,8 @@ And Python gives us a very useful tool: the `collections.abc` module.
 
 This module provides **abstract base classes**. They define the interface for different types of collections.
 
-We already used Container, Sized, Iterable, and Reversible. These all come from `collections.abc`.
+[//]: # (We already used Container, Sized, Iterable, and Reversible. These all come from `collections.abc`.)
+We already used Container, Sized and Iterable. These all come from `collections.abc`.
 
 ---
 

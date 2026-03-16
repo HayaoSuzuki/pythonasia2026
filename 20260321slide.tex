@@ -46,6 +46,7 @@
 \restartpythontexsession{\thesection}
 
 %\usepackage[dvipdfmx]{media9}
+\usepackage{graphicx}
 \usepackage{ulem}
  
 \title{Let's implement useless Python objects}
@@ -95,21 +96,44 @@
 
 \begin{frame}\frametitle{Who am I ?}
 
-\begin{block}{お前誰よ}
-\begin{description}
-\item[Name] Hayao Suzuki（鈴木　駿）
-\item[\xout{Twitter} X] \href{https://twitter.com/CardinalXaro}{@CardinalXaro}
-\item[Work] Software Engineer at TOKYO GAS CO.,LTD
-\end{description}
+\begin{block}{About me}
+\begin{columns}
+
+	\begin{column}[t]{0.8\textwidth}
+		\begin{description}
+			\item[Name] Hayao Suzuki（鈴木　駿）
+			\item[\xout{Twitter} X] \href{https://twitter.com/CardinalXaro}{@CardinalXaro}
+			\item[Work] Software Engineer at Tokyo Gas CO.,LTD
+			\item[Fun] Playing tuba in the Tokyo Gas Wind Orchestra
+		\end{description}
+	\end{column}
+	
+	\begin{column}[T]{0.17\textwidth}
+		\includegraphics[width=2cm]{hayao.jpg}
+	\end{column}
+	
+\end{columns}
 \end{block}
 
 \begin{block}{About Tokyo Gas}
-Tokyo Gas is the largest natural gas utility in Japan
-\begin{itemize}
-\item Production and sale of city gas, LNG sales, etc.
-\item Gas Pipeline Service Business、Supply of city gas
-\item Production, supply and sale of electricity
-\end{itemize}
+
+\begin{columns}
+
+	\begin{column}[t]{0.8\textwidth}
+		\begin{itemize}
+			\item The largest natural gas utility in Japan
+			\item Production and sale of city gas, LNG sales, etc.
+			\item Gas Pipeline Service Business、Supply of city gas
+			\item Production, supply and sale of electricity
+		\end{itemize}
+	\end{column}
+	
+	\begin{column}[T]{0.17\textwidth}
+		\includegraphics[width=2cm]{building.jpg}
+	\end{column}
+	
+\end{columns}
+
 \end{block}
 %\includemedia[
 %  addresource=voice/slide03.wav,
@@ -127,13 +151,13 @@ Tokyo Gas is the largest natural gas utility in Japan
 
 \begin{block}{Presentations of PyCon}
 \begin{itemize}
-\item \structure{明日からgraphlib、みんなで使おう}(PyCon JP 2025)
-\item \structure{Let's implement useless Python objects}(PyCon APAC 2023)
-\item \structure{組み込み関数powの知られざる進化}(PyCon JP 2021)
-\item \structure{インメモリーストリーム活用術}(PyCon JP 2020)
-\item \structure{君はcmathを知っているか}(PyCon mini Shizuoka 2020)
-\item \structure{Pythonと楽しむ初等整数論}(PyCon mini Hiroshima 2019)
-\item \structure{SymPyによる数式処理}(PyCon JP 2018)
+\item \structure{Tomorrow graphlib, Let Us Use Everybody}(PyCon JP 2025)
+\item \structure{Let's Implement Useless Python Objects}(PyCon APAC 2023)
+\item \structure{Unknown Evolution of the Built-in Function pow}(PyCon JP 2021)
+\item \structure{How to Use In-Memory Streams}(PyCon JP 2020)
+\item \structure{Do You Know cmath Module?}(PyCon mini Shizuoka 2020)
+\item \structure{Elementary Number Theory with Python}(PyCon mini Hiroshima 2019)
+\item \structure{Symbolic Mathematics Using SymPy}(PyCon JP 2018)
 \end{itemize}
 \end{block}
 Listed at  \url{https://xaro.hatenablog.jp/}
@@ -358,24 +382,24 @@ class ShuffledIterable(Iterable):
 
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{\texttt{reversed()} and \texttt{Reversible}}
-
-\begin{block}{\texttt{object.\_\_reversed\_\_()}}
-Called to implement the built-in function \texttt{reversed()}.
-\end{block}
-
-\begin{exampleblock}{Example: \texttt{ReversedReversible}}
-\begin{pygments}{python}
-class ReversedReversible(Reversible):
-    def __iter__(self) -> Iterator:
-        return iter(reversed(self._data))
-
-    def __reversed__(self) -> Iterator:
-        return iter(self._data)
-\end{pygments}
-\end{exampleblock}
-
-\end{frame}
+%\begin{frame}[fragile]\frametitle{\texttt{reversed()} and \texttt{Reversible}}
+%
+%\begin{block}{\texttt{object.\_\_reversed\_\_()}}
+%Called to implement the built-in function \texttt{reversed()}.
+%\end{block}
+%
+%\begin{exampleblock}{Example: \texttt{ReversedReversible}}
+%\begin{pygments}{python}
+%class ReversedReversible(Reversible):
+%    def __iter__(self) -> Iterator:
+%        return iter(reversed(self._data))
+%
+%    def __reversed__(self) -> Iterator:
+%        return iter(self._data)
+%\end{pygments}
+%\end{exampleblock}
+%
+%\end{frame}
 
 \begin{frame}\frametitle{Object Protocols}
 
@@ -407,7 +431,7 @@ ABC  & Interface \\
 \texttt{Sized}  & \texttt{\_\_len\_\_()} \\
 \texttt{Container}  & \texttt{\_\_contains\_\_()} \\
 \texttt{Iterable}  &  \texttt{\_\_iter\_\_()} \\
-\texttt{Reversible}  &  \texttt{\_\_reversed\_\_()} \\
+%\texttt{Reversible}  &  \texttt{\_\_reversed\_\_()} \\
 \texttt{Collection}  & \texttt{Sized}, \texttt{Container}, \texttt{Iterable}  \\
 \hline
 \end{tabular}
