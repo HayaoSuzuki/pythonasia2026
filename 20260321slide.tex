@@ -139,9 +139,9 @@ Tokyo Gas is the largest natural gas utility in Japan
 Listed at  \url{https://xaro.hatenablog.jp/}
 
 \includemedia[
-  addresource=voice/slide05.wav,
+  addresource=voice/slide04.wav,
   flashvars={
-    source=voice/slide05.wav
+    source=voice/slide04.wav
    &autoPlay=true
   },
   transparent
@@ -156,9 +156,9 @@ Listed at  \url{https://xaro.hatenablog.jp/}
 \huge{Let's implement \structure{useless} Python objects}
 \end{center}
 \includemedia[
-  addresource=voice/slide06.wav,
+  addresource=voice/slide05.wav,
   flashvars={
-    source=voice/slide06.wav
+    source=voice/slide05.wav
    &autoPlay=true
   },
   transparent
@@ -174,9 +174,9 @@ Listed at  \url{https://xaro.hatenablog.jp/}
 \end{enumerate}
 \end{block}
 \includemedia[
-  addresource=voice/slide07.wav,
+  addresource=voice/slide06.wav,
   flashvars={
-    source=voice/slide07.wav
+    source=voice/slide06.wav
    &autoPlay=true
   },
   transparent
@@ -191,9 +191,9 @@ Listed at  \url{https://xaro.hatenablog.jp/}
 Everyone knows the usefulness of the useful, but no one knows the usefulness of the useless.
 
 \includemedia[
-  addresource=voice/slide08.wav,
+  addresource=voice/slide07.wav,
   flashvars={
-    source=voice/slide08.wav
+    source=voice/slide07.wav
    &autoPlay=true
   },
   transparent
@@ -206,9 +206,9 @@ Everyone knows the usefulness of the useful, but no one knows the usefulness of 
 The useless objects are useless, but \structure{how to make a useless object} is very useful.
 \end{block}
 \includemedia[
-  addresource=voice/slide09.wav,
+  addresource=voice/slide08.wav,
   flashvars={
-    source=voice/slide09.wav
+    source=voice/slide08.wav
    &autoPlay=true
   },
   transparent
@@ -455,7 +455,7 @@ ABC  & built-in objects \\
 
 \end{frame}
 
-\begin{frame}[fragile,shrink=10]\frametitle{\texttt{Sequence}}
+\begin{frame}[fragile]\frametitle{\texttt{Sequence}}
 
 \begin{exampleblock}{Example: \texttt{ModularSequence}}
 \begin{pygments}{python}
@@ -467,9 +467,7 @@ class ModularSequence(Sequence):
             case slice():
                 n = len(self._data)
                 s = slice(
-                    key.start % n if key.start is not None else None,
-                    key.stop % n if key.stop is not None else None,
-                    key.step,
+                    key.start % n, key.stop % n, key.step
                 )
                 return self._data[s]
             case _:

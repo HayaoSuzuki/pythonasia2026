@@ -102,16 +102,6 @@ The quote says:
 
 "Everyone knows the usefulness of the useful, but no one knows the usefulness of the useless."
 
-[Long Pause]
-
-This is a very deep idea. Let me explain.
-
-In Zhuangzi's story, there is a big tree. The tree is so twisted and bent that no carpenter can use it. People say it is "useless."
-
-But because the tree is useless, nobody cuts it down. The tree lives for hundreds of years. So being "useless" actually saved the tree.
-
-[Pause]
-
 I think the same idea applies to programming.
 
 When we try to make something "useless," we must deeply understand how things work. We need to know the rules first. Then we can break them in a funny way.
