@@ -47,8 +47,9 @@ class TestFibonacciSized:
         assert len(obj) == fib(len(data))
 
     @given(data=st.lists(st.integers()))
-    def test_str(self, data: list[int]) -> None:
+    def test_repr_str(self, data: list[int]) -> None:
         obj = FibonacciSized(data)
+        assert repr(obj) == repr(data)
         assert str(obj) == str(data)
 
 
@@ -90,9 +91,10 @@ class TestReversedReversible:
         assert list(obj) == []
 
     @given(data=st.lists(st.integers()))
-    def test_repr(self, data: list[int]) -> None:
+    def test_repr_str(self, data: list[int]) -> None:
         obj = ReversedReversible(data)
         assert repr(obj) == repr(data)
+        assert str(obj) == str(data)
 
     @given(data=st.lists(st.integers()))
     def test_reversed(self, data: list[int]) -> None:
@@ -258,9 +260,14 @@ class TestMisprintedDictionary:
             max_size=20,
         )
     )
-    def test_repr(self, d: dict[str, int]) -> None:
+    def test_repr_str(self, d: dict[str, int]) -> None:
+        keys = list(d.keys())
+        values = list(d.values())
+        rotated = values[1:] + values[:1]
+        expected = dict(zip(keys, rotated, strict=True))
         obj = MisprintedDictionary(d)
-        assert repr(obj) != repr(None)
+        assert repr(obj) == repr(expected)
+        assert str(obj) == str(expected)
 
     @given(
         d=st.dictionaries(
