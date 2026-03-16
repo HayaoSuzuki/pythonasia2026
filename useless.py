@@ -166,17 +166,19 @@ class ModularSequence(Sequence[Any]):
         return item not in self._data
 
     def __getitem__(self, key: int | slice) -> Any:
-        if isinstance(key, int):
-            return self._data[key % len(self._data)]
-        if isinstance(key, slice):
-            n = len(self._data)
-            s = slice(
-                key.start % n if key.start is not None else None,
-                key.stop % n if key.stop is not None else None,
-                key.step,
-            )
-            return self._data[s]
-        raise TypeError
+        match key:
+            case int():
+                return self._data[key % len(self._data)]
+            case slice():
+                n = len(self._data)
+                s = slice(
+                    key.start % n if key.start is not None else None,
+                    key.stop % n if key.stop is not None else None,
+                    key.step,
+                )
+                return self._data[s]
+            case _:
+                raise TypeError
 
     def __len__(self) -> int:
         return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
