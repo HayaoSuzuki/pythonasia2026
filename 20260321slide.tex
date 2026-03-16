@@ -461,17 +461,19 @@ ABC  & built-in objects \\
 \begin{pygments}{python}
 class ModularSequence(Sequence):
     def __getitem__(self, key):
-        if isinstance(key, int):
-            return self._data[key % len(self._data)]
-        if isinstance(key, slice):
-            n = len(self._data)
-            s = slice(
-                key.start % n if key.start is not None else None,
-                key.stop % n if key.stop is not None else None,
-                key.step,
-            )
-            return self._data[s]
-        raise TypeError
+        match key:
+            case int():
+                return self._data[key % len(self._data)]
+            case slice():
+                n = len(self._data)
+                s = slice(
+                    key.start % n if key.start is not None else None,
+                    key.stop % n if key.stop is not None else None,
+                    key.step,
+                )
+                return self._data[s]
+            case _:
+                raise TypeError
 \end{pygments}
 \end{exampleblock}
 
@@ -487,6 +489,40 @@ class ModularSequence(Sequence):
 >>> print(seq[65543])
 3
 >>> seq.count(13) # It does not stop.
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Sequence}}
+
+\begin{exampleblock}{Example: \texttt{CompetitionSequence}}
+\begin{pygments}{python}
+class CompetitionSequence(Sequence):
+    def __getitem__(self, index):
+        return self._data[index]
+
+    def __iter__(self):
+        return iter(reversed(self._data))
+
+    def __len__(self):
+        return len(self._data)
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Sequence}}
+
+\begin{exampleblock}{Example: \texttt{CompetitionSequence}}
+\begin{pygments}{python}
+>>> s = CompetitionSequence("abcdefg")
+>>> s[0]
+'a'
+>>> list(s)
+['g', 'f', 'e', 'd', 'c', 'b', 'a']
+>>> len(s)
+7
 \end{pygments}
 \end{exampleblock}
 
@@ -517,10 +553,12 @@ class MisprintedDictionary(Mapping):
 \begin{exampleblock}{Example: \texttt{MisprintedDictionary}}
 \begin{pygments}{python}
 >>> d = MisprintedDictionary({"a": 1, "b": 2, "c": 3})
->>> for key in d:
-...     print(f"d[{key}]={d[key]}", end=" ")
-...
-d[a]=2 d[b]=3 d[c]=1
+>>> d["a"], d["b"], d["c"]
+(2, 3, 1)
+>>> list(d.keys())
+['a', 'b', 'c']
+>>> len(d)
+2
 \end{pygments}
 \end{exampleblock}
 
@@ -549,10 +587,34 @@ class CrowdSet(Set):
 
 \begin{exampleblock}{Example: \texttt{CrowdSet}}
 \begin{pygments}{python}
+class CrowdSet(Set):
+    def __len__(self):
+        return len(self._data) ** 2
+
+    def __and__(self, other):
+        return CrowdSet(self._data | other._data)
+
+    def __or__(self, other):
+        return CrowdSet(self._data & other._data)
+\end{pygments}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{Set}}
+
+\begin{exampleblock}{Example: \texttt{CrowdSet}}
+\begin{pygments}{python}
 >>> s = CrowdSet(("egg", "bacon", "spam"))
 >>> t = CrowdSet(("egg", "egg", "spam", "spam"))
 >>> s > t
 True
+>>> len(s)
+9
+>>> sorted(s & t)
+['bacon', 'egg', 'spam']
+>>> sorted(s | t)
+['egg', 'spam']
 \end{pygments}
 \end{exampleblock}
 

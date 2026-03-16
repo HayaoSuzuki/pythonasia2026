@@ -380,7 +380,7 @@ The key method is `__getitem__`. This is called when you use square brackets, li
 
 [Pause]
 
-Look at the code. When you access an index, it uses modular arithmetic: `key` mod `len(self._data)`.
+Look at the code. It uses Python's `match/case` syntax to handle different key types. When the key is an integer, it uses modular arithmetic: `key` mod `len(self._data)`.
 
 So the index wraps around. If the data has 20 items, index 0 and index 20 give the same result. Index 21 is the same as index 1.
 
@@ -408,7 +408,31 @@ This is a great example of an unexpected side effect.
 
 ---
 
-## Slide 25: Mapping - MisprintedDictionary code (22:10 - 23:00) ~50s
+## Slide 25: Sequence - CompetitionSequence code (22:10 - 22:50) ~40s
+
+Next is CompetitionSequence. It also inherits from Sequence.
+
+This one is interesting. `__getitem__` returns items in the normal order. So indexing works as expected.
+
+But `__iter__` returns items in **reversed** order. So when you loop with `for`, you get everything backwards.
+
+It's like a competition where the last place finisher is announced first.
+
+---
+
+## Slide 26: Sequence - CompetitionSequence demo (22:50 - 23:30) ~40s
+
+Let me show you.
+
+You create it with "abcdefg". Indexing with `s[0]` gives 'a' — that's correct.
+
+But `list(s)` gives ['g', 'f', 'e', 'd', 'c', 'b', 'a']. Completely reversed!
+
+And `len(s)` returns 7 — the real length. So it looks normal... until you iterate.
+
+---
+
+## Slide 27: Mapping - MisprintedDictionary code (23:30 - 24:20) ~50s
 
 Next is MisprintedDictionary. It inherits from Mapping.
 
@@ -418,19 +442,23 @@ So the keys are the same. But every value has moved one position forward. Like a
 
 ---
 
-## Slide 26: Mapping - MisprintedDictionary demo (23:00 - 23:40) ~40s
+## Slide 28: Mapping - MisprintedDictionary demo (24:20 - 25:10) ~50s
 
 Look at this example.
 
 You create it with `{"a": 1, "b": 2, "c": 3}`.
 
-When you iterate, you get: `d[a]=2`, `d[b]=3`, `d[c]=1`.
+Accessing the values: `d["a"]` is 2, `d["b"]` is 3, `d["c"]` is 1. Every value has shifted to the next key.
 
-Every value has shifted to the next key. You always get the wrong answer!
+[Pause]
+
+But notice: `list(d.keys())` returns `['a', 'b', 'c']` — the keys look perfectly normal! And `len(d)` returns 2 — it uses a Fibonacci-based length, just like FibonacciSized.
+
+So the keys are correct, but the values and the length are both wrong.
 
 ---
 
-## Slide 27: Set - CrowdSet code (23:40 - 24:30) ~50s
+## Slide 29: Set - CrowdSet code 1 (25:10 - 25:50) ~40s
 
 The last example is CrowdSet. It inherits from Set.
 
@@ -446,20 +474,38 @@ The comparison is reversed! Bigger sets are "less than" smaller sets.
 
 ---
 
-## Slide 28: Set - CrowdSet demo (24:30 - 25:10) ~40s
+## Slide 30: Set - CrowdSet code 2 (25:50 - 26:30) ~40s
+
+CrowdSet has more tricks.
+
+`__len__` returns the square of the real size. So a set with 3 items says it has 9.
+
+And the set operations are swapped: `__and__` — the intersection operator — actually computes the **union**. And `__or__` — the union operator — computes the **intersection**.
+
+Everything is reversed. It's crowd mentality — the opposite of what you expect.
+
+---
+
+## Slide 31: Set - CrowdSet demo (26:30 - 27:20) ~50s
 
 Here is the result.
 
 `s` has 3 unique items: "egg", "bacon", "spam."
 `t` has 2 unique items: "egg" and "spam." Remember, sets remove duplicates.
 
-`s` greater than `t` returns True. But with CrowdSet's reversed logic, this means s has **more** elements.
+`s > t` returns True. With CrowdSet's reversed logic, this means s has **more** elements.
 
-It's called CrowdSet because the more crowded set thinks it is smaller.
+`len(s)` returns 9 — that's 3 squared.
+
+`s & t` — which should be the intersection — returns all 3 items. It computed the union instead!
+
+And `s | t` — which should be the union — returns only "egg" and "spam". It computed the intersection!
+
+It's called CrowdSet because everything about it is backwards.
 
 ---
 
-## Slide 29: Conclusion (25:10 - 27:00) ~110s
+## Slide 32: Conclusion (27:20 - 29:00) ~100s
 
 Let me wrap up.
 
@@ -493,7 +539,7 @@ Thank you very much!
 
 ---
 
-## Q&A (27:00 - 30:00) ~3min
+## Q&A (29:00 - 30:00) ~1min
 
 Are there any questions?
 
@@ -510,7 +556,7 @@ Are there any questions?
 | Data Structures & Operations | 13 | 2 min |
 | Container / Sized / Iterable / Reversible | 14-17 | 4 min |
 | Object Protocols & collections.abc | 18-21 | 2.5 min |
-| Sequence / Mapping / Set | 22-28 | 5.5 min |
-| Conclusion | 29 | 2 min |
-| Q&A / Buffer | - | 3 min |
-| **Total** | **29 slides** | **~30 min** |
+| Sequence / Mapping / Set | 22-31 | 7 min |
+| Conclusion | 32 | 2 min |
+| Q&A / Buffer | - | 1 min |
+| **Total** | **32 slides** | **~30 min** |
