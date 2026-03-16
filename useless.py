@@ -222,6 +222,10 @@ class CrowdSet(AbstractSet[Any]):
     True
     >>> len(s)
     9
+    >>> sorted(s & t)
+    ['bacon', 'egg', 'spam']
+    >>> sorted(s | t)
+    ['egg', 'spam']
     """
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
@@ -256,6 +260,8 @@ class MisprintedDictionary(Mapping[str, Any]):
     >>> d = MisprintedDictionary({"a": 1, "b": 2, "c": 3})
     >>> d["a"], d["b"], d["c"]
     (2, 3, 1)
+    >>> list(d.keys())
+    ['a', 'b', 'c']
     >>> len(d)
     2
     """
