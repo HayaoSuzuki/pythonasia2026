@@ -331,10 +331,9 @@ Called to implement the built-in function \texttt{len()}.
 class FibonacciSized(Sized):
     PHI: Final[float] = (1 + math.sqrt(5)) / 2
     def __len__(self) -> int:
-        return math.floor(
-            (1 / math.sqrt(5)) 
+        return round(
+            (1 / math.sqrt(5))
             * pow(self.PHI, len(self._data))
-            + (1 / 2)
         )
 \end{pygments}
 \end{exampleblock}
@@ -369,9 +368,7 @@ Called to implement the built-in function \texttt{reversed()}.
 \begin{pygments}{python}
 class ReversedReversible(Reversible):
     def __iter__(self) -> Iterator:
-        return iter(
-            random.sample(self._data, k=len(self._data))
-        )
+        return iter(reversed(self._data))
 
     def __reversed__(self) -> Iterator:
         return iter(self._data)
@@ -501,14 +498,14 @@ class ModularSequence(Sequence):
 \begin{pygments}{python}
 class MisprintedDictionary(Mapping):
     def __init__(self, _dict: dict):
-        shuffled_keys = random.sample(
-            list(_dict.keys()), k=len(_dict.keys())
-        )
-        shuffled_values = random.sample(
-            list(_dict.values()), k=len(_dict.keys())
+        keys = list(_dict.keys())
+        values = list(_dict.values())
+        rotated_values = chain(
+            islice(values, 1, None),
+            islice(values, 1),
         )
         self._data = dict(
-            zip(shuffled_keys, shuffled_values)
+            zip(keys, rotated_values)
         )
 \end{pygments}
 \end{exampleblock}
@@ -523,7 +520,7 @@ class MisprintedDictionary(Mapping):
 >>> for key in d:
 ...     print(f"d[{key}]={d[key]}", end=" ")
 ...
-d[c]=1 d[b]=2 d[a]=3
+d[a]=2 d[b]=3 d[c]=1
 \end{pygments}
 \end{exampleblock}
 

@@ -302,7 +302,7 @@ It inherits from Reversible.
 
 [Pause]
 
-Normal iteration is shuffled, just like ShuffledIterable.
+Normal iteration returns elements in **reversed** order.
 
 But when you call reversed, it returns the original order.
 
@@ -412,9 +412,9 @@ This is a great example of an unexpected side effect.
 
 Next is MisprintedDictionary. It inherits from Mapping.
 
-In `__init__`, it takes a normal dictionary. Then it shuffles the keys and values **separately**. And creates a new dictionary with random key-value pairs.
+In `__init__`, it takes a normal dictionary. Then it **rotates the values by one position**, shifting each value to the next key.
 
-So the keys are the same. But the values are mixed up. Like a misprinted book where the pages are in the wrong order.
+So the keys are the same. But every value has moved one position forward. Like a misprinted book where the pages are in the wrong order.
 
 ---
 
@@ -424,9 +424,9 @@ Look at this example.
 
 You create it with `{"a": 1, "b": 2, "c": 3}`.
 
-When you iterate, you get: `d[c]=1`, `d[b]=2`, `d[a]=3`.
+When you iterate, you get: `d[a]=2`, `d[b]=3`, `d[c]=1`.
 
-The keys and values are all mixed up. You can never trust what you get back!
+Every value has shifted to the next key. You always get the wrong answer!
 
 ---
 
