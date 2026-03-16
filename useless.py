@@ -13,6 +13,7 @@ from collections.abc import (
 from collections.abc import (
     Set as AbstractSet,
 )
+from itertools import chain, islice
 from typing import Any, Final
 
 
@@ -124,6 +125,8 @@ class ReversedReversible(Reversible[Any]):
     """Reversible that returns elements in original order when reversed.
 
     >>> obj = ReversedReversible((1, 2, 3))
+    >>> list(obj)
+    [3, 2, 1]
     >>> list(reversed(obj))
     [1, 2, 3]
     """
@@ -141,7 +144,7 @@ class ReversedReversible(Reversible[Any]):
         return str(self._data)
 
     def __iter__(self) -> Iterator[Any]:
-        return iter(random.sample(self._data, k=len(self._data)))
+        return iter(reversed(self._data))
 
     def __reversed__(self) -> Iterator[Any]:
         return iter(self._data)
@@ -216,15 +219,15 @@ class ModularSequence(Sequence[Any]):
 
 
 class CompetitionSequence(Sequence[Any]):
-    """Sequence whose iteration order is shuffled but indexing is normal.
+    """Sequence whose iteration order is reversed but indexing is normal.
 
     >>> s = CompetitionSequence("abcdefg")
     >>> s[0]
     'a'
+    >>> list(s)
+    ['g', 'f', 'e', 'd', 'c', 'b', 'a']
     >>> len(s)
     7
-    >>> sorted(s)
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g']
     """
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
@@ -243,7 +246,7 @@ class CompetitionSequence(Sequence[Any]):
         return self._data[index]
 
     def __iter__(self) -> Iterator[Any]:
-        return iter(random.sample(self._data, k=len(self._data)))
+        return iter(reversed(self._data))
 
     def __len__(self) -> int:
         return len(self._data)
@@ -294,13 +297,11 @@ class CrowdSet(AbstractSet[Any]):
 
 
 class MisprintedDictionary(Mapping[str, Any]):
-    """Mapping that shuffles both keys and values independently.
+    """Mapping that rotates values by one position, creating a misprint effect.
 
     >>> d = MisprintedDictionary({"a": 1, "b": 2, "c": 3})
-    >>> sorted(d.keys())
-    ['a', 'b', 'c']
-    >>> sorted(d.values())
-    [1, 2, 3]
+    >>> d["a"], d["b"], d["c"]
+    (2, 3, 1)
     >>> len(d)
     2
     """
@@ -308,10 +309,11 @@ class MisprintedDictionary(Mapping[str, Any]):
     PHI: Final[float] = (1 + math.sqrt(5)) / 2
 
     def __init__(self, _dict: dict[str, Any]) -> None:
-        shuffled_keys = random.sample(list(_dict.keys()), k=len(_dict.keys()))
-        shuffled_values = random.sample(list(_dict.values()), k=len(_dict.keys()))
+        keys = list(_dict.keys())
+        values = list(_dict.values())
+        rotated_values = chain(islice(values, 1, None), islice(values, 1))
 
-        self._data = dict(zip(shuffled_keys, shuffled_values, strict=True))
+        self._data = dict(zip(keys, rotated_values, strict=True))
 
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
