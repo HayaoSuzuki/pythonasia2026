@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "hypothesis>=6.151.9",
-    "mutmut>=3.5.0",
     "mypy>=1.19.1",
     "pygments>=2.19.2",
     "pyrefly>=0.56.0",
@@ -67,15 +66,3 @@ python_version = "3.14"
 
 [[tool.mypy.overrides]]
 module = "test_useless"
-
-[tool.mutmut]
-mutate_only_covered_lines = true
-paths_to_mutate = [
-    "useless.py",
-]
-pytest_add_cli_args_test_selection = [
-    "test_useless.py",
-]
-pytest_add_cli_args = [
-    "--override-ini=addopts=",
-]

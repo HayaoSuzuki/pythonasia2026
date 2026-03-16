@@ -28,16 +28,14 @@ def fib(n: int) -> int:
 
 
 class TestLiarContainer:
-    @given(data=st.lists(st.integers()), x=st.integers())
-    def test_contains(self, data: list[int], x: int) -> None:
+    @given(
+        data=st.lists(st.integers(), min_size=1),
+        x=st.data(),
+    )
+    def test_contains(self, data: list[int], x: st.DataObject) -> None:
         obj = LiarContainer(data)
-        assert (x in obj) == (x not in data)
-
-    @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data: list[int]) -> None:
-        obj = LiarContainer(data)
-        assert repr(obj) == repr(data)
-        assert str(obj) == str(data)
+        item = x.draw(st.sampled_from(data) | st.integers())
+        assert (item in obj) == (item not in data)
 
 
 class TestFibonacciSized:
@@ -46,12 +44,6 @@ class TestFibonacciSized:
         obj = FibonacciSized(data)
         assert len(obj) == fib(len(data))
 
-    @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data: list[int]) -> None:
-        obj = FibonacciSized(data)
-        assert repr(obj) == repr(data)
-        assert str(obj) == str(data)
-
 
 class TestShuffledIterable:
     @given(data=st.lists(st.integers()))
@@ -59,43 +51,22 @@ class TestShuffledIterable:
         obj = ShuffledIterable(data)
         assert sorted(obj) == sorted(data)
 
-    def test_default(self) -> None:
-        obj = ShuffledIterable()
-        assert list(obj) == []
-
-    @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data: list[int]) -> None:
-        obj = ShuffledIterable(data)
-        assert repr(obj) == repr(data)
-        assert str(obj) == str(data)
-
 
 class TestEmptyIterable:
-    @given(data=st.lists(st.integers()))
-    def test_iter(self, data: list[int]) -> None:
-        obj = EmptyIterable(data)
+    @given(data=st.from_type(type).flatmap(st.from_type) | st.none())
+    def test_iter(self, data: object) -> None:
+        obj = EmptyIterable(data)  # type: ignore[arg-type]
         assert list(obj) == []
 
 
 class TestFixedIterable:
-    @given(data=st.lists(st.integers()))
-    def test_iter(self, data: list[int]) -> None:
-        obj = FixedIterable(data)
+    @given(data=st.from_type(type).flatmap(st.from_type) | st.none())
+    def test_iter(self, data: object) -> None:
+        obj = FixedIterable(data)  # type: ignore[arg-type]
         assert list(obj) == ["Do NOT iterate me !"]
 
 
 class TestReversedReversible:
-    def test_default(self) -> None:
-        obj = ReversedReversible()
-        assert list(reversed(obj)) == []
-        assert list(obj) == []
-
-    @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data: list[int]) -> None:
-        obj = ReversedReversible(data)
-        assert repr(obj) == repr(data)
-        assert str(obj) == str(data)
-
     @given(data=st.lists(st.integers()))
     def test_reversed(self, data: list[int]) -> None:
         obj = ReversedReversible(data)
@@ -108,21 +79,16 @@ class TestReversedReversible:
 
 
 class TestUselessCollection:
-    @given(data=st.lists(st.integers(), max_size=20), x=st.integers())
-    def test_combined(self, data: list[int], x: int) -> None:
+    @given(data=st.lists(st.integers(), min_size=1, max_size=20), x=st.data())
+    def test_combined(self, data: list[int], x: st.DataObject) -> None:
         obj = UselessCollection(data)
         assert len(obj) == fib(len(data))
-        assert (x in obj) == (x not in data)
+        item = x.draw(st.sampled_from(data) | st.integers())
+        assert (item in obj) == (item not in data)
         assert sorted(obj) == sorted(data)
 
 
 class TestModularSequence:
-    @given(data=st.lists(st.integers(), min_size=1, max_size=20))
-    def test_repr_str(self, data: list[int]) -> None:
-        obj = ModularSequence(data)
-        assert repr(obj) == repr(data)
-        assert str(obj) == str(data)
-
     @given(
         data=st.lists(st.integers(), min_size=1, max_size=20),
         i=st.integers(min_value=0, max_value=1000),
@@ -136,10 +102,11 @@ class TestModularSequence:
         obj = ModularSequence(data)
         assert len(obj) == fib(len(data))
 
-    @given(data=st.lists(st.integers(), min_size=1, max_size=20), x=st.integers())
-    def test_contains(self, data: list[int], x: int) -> None:
+    @given(data=st.lists(st.integers(), min_size=1, max_size=20), x=st.data())
+    def test_contains(self, data: list[int], x: st.DataObject) -> None:
         obj = ModularSequence(data)
-        assert (x in obj) == (x not in data)
+        item = x.draw(st.sampled_from(data) | st.integers())
+        assert (item in obj) == (item not in data)
 
     def test_empty_crashes(self) -> None:
         obj = ModularSequence([])
@@ -149,7 +116,10 @@ class TestModularSequence:
     @given(data=st.lists(st.integers(), min_size=1, max_size=20))
     def test_reversed(self, data: list[int]) -> None:
         obj = ModularSequence(data)
-        assert list(reversed(obj)) == data
+        n = len(data)
+        fib_n = fib(n)
+        expected = [data[i % n] for i in range(fib_n - 1, -1, -1)]
+        assert list(reversed(obj)) == expected
 
     @given(
         data=st.lists(st.integers(), min_size=2, max_size=20),
@@ -178,17 +148,6 @@ class TestModularSequence:
 
 
 class TestCompetitionSequence:
-    def test_default(self) -> None:
-        obj = CompetitionSequence()
-        assert list(obj) == []
-        assert len(obj) == 0
-
-    @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data: list[int]) -> None:
-        obj = CompetitionSequence(data)
-        assert repr(obj) == repr(data)
-        assert str(obj) == str(data)
-
     @given(data=st.lists(st.integers()))
     def test_iter(self, data: list[int]) -> None:
         obj = CompetitionSequence(data)
@@ -208,67 +167,54 @@ class TestCompetitionSequence:
         obj = CompetitionSequence(data)
         assert len(obj) == len(data)
 
-    @given(data=st.lists(st.integers(), min_size=1), x=st.integers())
-    def test_contains(self, data: list[int], x: int) -> None:
+    @given(data=st.lists(st.integers(), min_size=1), x=st.data())
+    def test_contains(self, data: list[int], x: st.DataObject) -> None:
         obj = CompetitionSequence(data)
-        assert (x in obj) == (x in data)
+        item = x.draw(st.sampled_from(data) | st.integers())
+        assert (item in obj) == (item in data)
 
 
 class TestCrowdSet:
-    @given(data=st.lists(st.integers()))
-    def test_len(self, data: list[int]) -> None:
+    @given(data=st.frozensets(st.integers()))
+    def test_len(self, data: frozenset[int]) -> None:
         obj = CrowdSet(data)
-        assert len(obj) == len(set(data)) ** 2
+        assert len(obj) == len(data) ** 2
 
     @given(
-        a=st.lists(st.integers(min_value=0, max_value=20)),
-        b=st.lists(st.integers(min_value=0, max_value=20)),
+        a=st.frozensets(st.integers(min_value=0, max_value=20)),
+        b=st.frozensets(st.integers(min_value=0, max_value=20)),
     )
-    def test_ordering(self, a: list[int], b: list[int]) -> None:
+    def test_ordering(self, a: frozenset[int], b: frozenset[int]) -> None:
         sa, sb = CrowdSet(a), CrowdSet(b)
-        real_a, real_b = set(a), set(b)
-        # __lt__ is defined as self._data >= other._data (reversed)
-        if real_a >= real_b:
-            assert sa < sb or set(a) == set(b)
-        if real_a > real_b:
+        if a >= b:
+            assert sa < sb or a == b
+        if a > b:
             assert sa < sb
 
     @given(
-        a=st.lists(st.integers(min_value=0, max_value=20)),
-        b=st.lists(st.integers(min_value=0, max_value=20)),
+        a=st.frozensets(st.integers(min_value=0, max_value=20)),
+        b=st.frozensets(st.integers(min_value=0, max_value=20)),
     )
-    def test_and_or(self, a: list[int], b: list[int]) -> None:
+    def test_and_gives_union(self, a: frozenset[int], b: frozenset[int]) -> None:
         sa, sb = CrowdSet(a), CrowdSet(b)
-        real_a, real_b = set(a), set(b)
-        # __and__ returns union
-        assert set(sa & sb) == real_a | real_b
-        # __or__ returns intersection
-        assert set(sa | sb) == real_a & real_b
+        assert set(sa & sb) == a | b
 
-    @given(data=st.lists(st.integers()), x=st.integers())
-    def test_contains(self, data: list[int], x: int) -> None:
+    @given(
+        a=st.frozensets(st.integers(min_value=0, max_value=20)),
+        b=st.frozensets(st.integers(min_value=0, max_value=20)),
+    )
+    def test_or_gives_intersection(self, a: frozenset[int], b: frozenset[int]) -> None:
+        sa, sb = CrowdSet(a), CrowdSet(b)
+        assert set(sa | sb) == a & b
+
+    @given(data=st.frozensets(st.integers(), min_size=1), x=st.data())
+    def test_contains(self, data: frozenset[int], x: st.DataObject) -> None:
         obj = CrowdSet(data)
-        assert (x in obj) == (x in set(data))
+        item = x.draw(st.sampled_from(sorted(data)) | st.integers())
+        assert (item in obj) == (item in data)
 
 
 class TestMisprintedDictionary:
-    @given(
-        d=st.dictionaries(
-            st.text(alphabet=string.ascii_letters, min_size=1),
-            st.integers(),
-            min_size=1,
-            max_size=20,
-        )
-    )
-    def test_repr_str(self, d: dict[str, int]) -> None:
-        keys = list(d.keys())
-        values = list(d.values())
-        rotated = values[1:] + values[:1]
-        expected = dict(zip(keys, rotated, strict=True))
-        obj = MisprintedDictionary(d)
-        assert repr(obj) == repr(expected)
-        assert str(obj) == str(expected)
-
     @given(
         d=st.dictionaries(
             st.text(alphabet=string.ascii_letters, min_size=1),

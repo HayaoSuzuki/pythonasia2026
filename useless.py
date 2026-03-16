@@ -33,12 +33,6 @@ class FibonacciSized(Sized):
         else:
             self._data = []
 
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
-
     def __len__(self) -> int:
         return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
 
@@ -59,12 +53,6 @@ class LiarContainer(Container[Any]):
         else:
             self._data = []
 
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
-
     def __contains__(self, item: object) -> bool:
         return item not in self._data
 
@@ -82,12 +70,6 @@ class ShuffledIterable(Iterable[Any]):
             self._data = [v for v in data]
         else:
             self._data = []
-
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
 
     def __iter__(self) -> Iterator[Any]:
         return iter(random.sample(self._data, k=len(self._data)))
@@ -137,12 +119,6 @@ class ReversedReversible(Reversible[Any]):
         else:
             self._data = []
 
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
-
     def __iter__(self) -> Iterator[Any]:
         return iter(reversed(self._data))
 
@@ -186,17 +162,8 @@ class ModularSequence(Sequence[Any]):
         else:
             self._data = []
 
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
-
     def __contains__(self, item: object) -> bool:
         return item not in self._data
-
-    # def __iter__(self) -> Iterator:
-    #     return iter(random.sample(self._data, k=len(self._data)))
 
     def __getitem__(self, key: int | slice) -> Any:
         if isinstance(key, int):
@@ -213,9 +180,6 @@ class ModularSequence(Sequence[Any]):
 
     def __len__(self) -> int:
         return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
-
-    def __reversed__(self) -> Iterator[Any]:
-        return iter(self._data)
 
 
 class CompetitionSequence(Sequence[Any]):
@@ -235,12 +199,6 @@ class CompetitionSequence(Sequence[Any]):
             self._data = [v for v in data]
         else:
             self._data = []
-
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
 
     def __getitem__(self, index: int | slice) -> Any:
         return self._data[index]
@@ -270,12 +228,6 @@ class CrowdSet(AbstractSet[Any]):
             self._data = set(data)
         else:
             self._data = set()
-
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
 
     def __lt__(self, other: CrowdSet) -> bool:  # type: ignore[override]
         return self._data >= other._data
@@ -323,9 +275,3 @@ class MisprintedDictionary(Mapping[str, Any]):
 
     def __len__(self) -> int:
         return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
-
-    def __repr__(self) -> str:
-        return repr(self._data)
-
-    def __str__(self) -> str:
-        return str(self._data)
