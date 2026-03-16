@@ -9,6 +9,7 @@ dependencies = [
     "mutmut>=3.5.0",
     "mypy>=1.19.1",
     "pygments>=2.19.2",
+    "pyrefly>=0.56.0",
     "pytest>=9.0.2",
     "ruff>=0.15.6",
 ]
@@ -66,8 +67,6 @@ python_version = "3.14"
 
 [[tool.mypy.overrides]]
 module = "test_useless"
-disallow_untyped_defs = false
-disallow_untyped_calls = false
 
 [tool.mutmut]
 mutate_only_covered_lines = true

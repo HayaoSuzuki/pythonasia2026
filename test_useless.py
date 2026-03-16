@@ -1,3 +1,4 @@
+import functools
 import string
 
 import pytest
@@ -19,21 +20,21 @@ from useless import (
 )
 
 
+@functools.lru_cache
 def fib(n: int) -> int:
-    a, b = 0, 1
-    for _ in range(n):
-        a, b = b, a + b
-    return a
+    if n < 2:  # noqa: PLR2004
+        return n
+    return fib(n - 1) + fib(n - 2)
 
 
 class TestLiarContainer:
     @given(data=st.lists(st.integers()), x=st.integers())
-    def test_contains(self, data, x):
+    def test_contains(self, data: list[int], x: int) -> None:
         obj = LiarContainer(data)
         assert (x in obj) == (x not in data)
 
     @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data):
+    def test_repr_str(self, data: list[int]) -> None:
         obj = LiarContainer(data)
         assert repr(obj) == repr(data)
         assert str(obj) == str(data)
@@ -41,28 +42,28 @@ class TestLiarContainer:
 
 class TestFibonacciSized:
     @given(data=st.lists(st.integers(), max_size=20))
-    def test_len(self, data):
+    def test_len(self, data: list[int]) -> None:
         obj = FibonacciSized(data)
         assert len(obj) == fib(len(data))
 
     @given(data=st.lists(st.integers()))
-    def test_str(self, data):
+    def test_str(self, data: list[int]) -> None:
         obj = FibonacciSized(data)
         assert str(obj) == str(data)
 
 
 class TestShuffledIterable:
     @given(data=st.lists(st.integers()))
-    def test_iter(self, data):
+    def test_iter(self, data: list[int]) -> None:
         obj = ShuffledIterable(data)
         assert sorted(obj) == sorted(data)
 
-    def test_default(self):
+    def test_default(self) -> None:
         obj = ShuffledIterable()
         assert list(obj) == []
 
     @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data):
+    def test_repr_str(self, data: list[int]) -> None:
         obj = ShuffledIterable(data)
         assert repr(obj) == repr(data)
         assert str(obj) == str(data)
@@ -70,43 +71,43 @@ class TestShuffledIterable:
 
 class TestEmptyIterable:
     @given(data=st.lists(st.integers()))
-    def test_iter(self, data):
+    def test_iter(self, data: list[int]) -> None:
         obj = EmptyIterable(data)
         assert list(obj) == []
 
 
 class TestFixedIterable:
     @given(data=st.lists(st.integers()))
-    def test_iter(self, data):
+    def test_iter(self, data: list[int]) -> None:
         obj = FixedIterable(data)
         assert list(obj) == ["Do NOT iterate me !"]
 
 
 class TestReversedReversible:
-    def test_default(self):
+    def test_default(self) -> None:
         obj = ReversedReversible()
         assert list(reversed(obj)) == []
         assert list(obj) == []
 
     @given(data=st.lists(st.integers()))
-    def test_repr(self, data):
+    def test_repr(self, data: list[int]) -> None:
         obj = ReversedReversible(data)
         assert repr(obj) == repr(data)
 
     @given(data=st.lists(st.integers()))
-    def test_reversed(self, data):
+    def test_reversed(self, data: list[int]) -> None:
         obj = ReversedReversible(data)
         assert list(reversed(obj)) == data
 
     @given(data=st.lists(st.integers()))
-    def test_iter(self, data):
+    def test_iter(self, data: list[int]) -> None:
         obj = ReversedReversible(data)
         assert list(obj) == list(reversed(data))
 
 
 class TestUselessCollection:
     @given(data=st.lists(st.integers(), max_size=20), x=st.integers())
-    def test_combined(self, data, x):
+    def test_combined(self, data: list[int], x: int) -> None:
         obj = UselessCollection(data)
         assert len(obj) == fib(len(data))
         assert (x in obj) == (x not in data)
@@ -115,7 +116,7 @@ class TestUselessCollection:
 
 class TestModularSequence:
     @given(data=st.lists(st.integers(), min_size=1, max_size=20))
-    def test_repr_str(self, data):
+    def test_repr_str(self, data: list[int]) -> None:
         obj = ModularSequence(data)
         assert repr(obj) == repr(data)
         assert str(obj) == str(data)
@@ -124,27 +125,27 @@ class TestModularSequence:
         data=st.lists(st.integers(), min_size=1, max_size=20),
         i=st.integers(min_value=0, max_value=1000),
     )
-    def test_getitem(self, data, i):
+    def test_getitem(self, data: list[int], i: int) -> None:
         obj = ModularSequence(data)
         assert obj[i] == data[i % len(data)]
 
     @given(data=st.lists(st.integers(), min_size=1, max_size=20))
-    def test_len(self, data):
+    def test_len(self, data: list[int]) -> None:
         obj = ModularSequence(data)
         assert len(obj) == fib(len(data))
 
     @given(data=st.lists(st.integers(), min_size=1, max_size=20), x=st.integers())
-    def test_contains(self, data, x):
+    def test_contains(self, data: list[int], x: int) -> None:
         obj = ModularSequence(data)
         assert (x in obj) == (x not in data)
 
-    def test_empty_crashes(self):
+    def test_empty_crashes(self) -> None:
         obj = ModularSequence([])
         with pytest.raises(ZeroDivisionError):
             obj[0]
 
     @given(data=st.lists(st.integers(), min_size=1, max_size=20))
-    def test_reversed(self, data):
+    def test_reversed(self, data: list[int]) -> None:
         obj = ModularSequence(data)
         assert list(reversed(obj)) == data
 
@@ -153,7 +154,7 @@ class TestModularSequence:
         start=st.none() | st.integers(min_value=0, max_value=100),
         stop=st.none() | st.integers(min_value=0, max_value=100),
     )
-    def test_slice(self, data, start, stop):
+    def test_slice(self, data: list[int], start: int | None, stop: int | None) -> None:
         obj = ModularSequence(data)
         n = len(data)
         expected_start = start % n if start is not None else None
@@ -166,26 +167,28 @@ class TestModularSequence:
         stop=st.integers(min_value=0, max_value=100),
         step=st.integers(min_value=1, max_value=5),
     )
-    def test_slice_step(self, data, start, stop, step):
+    def test_slice_step(
+        self, data: list[int], start: int, stop: int, step: int
+    ) -> None:
         obj = ModularSequence(data)
         n = len(data)
         assert obj[start:stop:step] == data[start % n : stop % n : step]
 
 
 class TestCompetitionSequence:
-    def test_default(self):
+    def test_default(self) -> None:
         obj = CompetitionSequence()
         assert list(obj) == []
         assert len(obj) == 0
 
     @given(data=st.lists(st.integers()))
-    def test_repr_str(self, data):
+    def test_repr_str(self, data: list[int]) -> None:
         obj = CompetitionSequence(data)
         assert repr(obj) == repr(data)
         assert str(obj) == str(data)
 
     @given(data=st.lists(st.integers()))
-    def test_iter(self, data):
+    def test_iter(self, data: list[int]) -> None:
         obj = CompetitionSequence(data)
         assert list(obj) == list(reversed(data))
 
@@ -193,25 +196,25 @@ class TestCompetitionSequence:
         data=st.lists(st.integers(), min_size=1),
         i=st.integers(min_value=0, max_value=100),
     )
-    def test_getitem(self, data, i):
+    def test_getitem(self, data: list[int], i: int) -> None:
         obj = CompetitionSequence(data)
         idx = i % len(data)
         assert obj[idx] == data[idx]
 
     @given(data=st.lists(st.integers()))
-    def test_len(self, data):
+    def test_len(self, data: list[int]) -> None:
         obj = CompetitionSequence(data)
         assert len(obj) == len(data)
 
     @given(data=st.lists(st.integers(), min_size=1), x=st.integers())
-    def test_contains(self, data, x):
+    def test_contains(self, data: list[int], x: int) -> None:
         obj = CompetitionSequence(data)
         assert (x in obj) == (x in data)
 
 
 class TestCrowdSet:
     @given(data=st.lists(st.integers()))
-    def test_len(self, data):
+    def test_len(self, data: list[int]) -> None:
         obj = CrowdSet(data)
         assert len(obj) == len(set(data)) ** 2
 
@@ -219,7 +222,7 @@ class TestCrowdSet:
         a=st.lists(st.integers(min_value=0, max_value=20)),
         b=st.lists(st.integers(min_value=0, max_value=20)),
     )
-    def test_ordering(self, a, b):
+    def test_ordering(self, a: list[int], b: list[int]) -> None:
         sa, sb = CrowdSet(a), CrowdSet(b)
         real_a, real_b = set(a), set(b)
         # __lt__ is defined as self._data >= other._data (reversed)
@@ -232,7 +235,7 @@ class TestCrowdSet:
         a=st.lists(st.integers(min_value=0, max_value=20)),
         b=st.lists(st.integers(min_value=0, max_value=20)),
     )
-    def test_and_or(self, a, b):
+    def test_and_or(self, a: list[int], b: list[int]) -> None:
         sa, sb = CrowdSet(a), CrowdSet(b)
         real_a, real_b = set(a), set(b)
         # __and__ returns union
@@ -241,7 +244,7 @@ class TestCrowdSet:
         assert set(sa | sb) == real_a & real_b
 
     @given(data=st.lists(st.integers()), x=st.integers())
-    def test_contains(self, data, x):
+    def test_contains(self, data: list[int], x: int) -> None:
         obj = CrowdSet(data)
         assert (x in obj) == (x in set(data))
 
@@ -255,7 +258,7 @@ class TestMisprintedDictionary:
             max_size=20,
         )
     )
-    def test_repr(self, d):
+    def test_repr(self, d: dict[str, int]) -> None:
         obj = MisprintedDictionary(d)
         assert repr(obj) != repr(None)
 
@@ -266,7 +269,7 @@ class TestMisprintedDictionary:
             max_size=20,
         )
     )
-    def test_keys(self, d):
+    def test_keys(self, d: dict[str, int]) -> None:
         obj = MisprintedDictionary(d)
         assert sorted(obj.keys()) == sorted(d.keys())
 
@@ -277,7 +280,7 @@ class TestMisprintedDictionary:
             max_size=20,
         )
     )
-    def test_values(self, d):
+    def test_values(self, d: dict[str, int]) -> None:
         obj = MisprintedDictionary(d)
         assert sorted(obj.values()) == sorted(d.values())
 
@@ -288,7 +291,7 @@ class TestMisprintedDictionary:
             max_size=20,
         )
     )
-    def test_len(self, d):
+    def test_len(self, d: dict[str, int]) -> None:
         obj = MisprintedDictionary(d)
         assert len(obj) == fib(len(d))
 
@@ -300,7 +303,7 @@ class TestMisprintedDictionary:
             max_size=20,
         )
     )
-    def test_getitem(self, d):
+    def test_getitem(self, d: dict[str, int]) -> None:
         obj = MisprintedDictionary(d)
         keys = list(d.keys())
         values = list(d.values())
