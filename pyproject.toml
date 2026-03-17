@@ -10,6 +10,7 @@ dependencies = [
     "pygments>=2.19.2",
     "pyrefly>=0.56.0",
     "pytest>=9.0.2",
+    "pytest-randomly>=4.0.1",
     "ruff>=0.15.6",
 ]
 

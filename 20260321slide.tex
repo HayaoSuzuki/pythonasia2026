@@ -556,14 +556,13 @@ class CompetitionSequence(Sequence):
 \begin{pygments}{python}
 class MisprintedDictionary(Mapping):
     def __init__(self, _dict: dict):
-        keys = list(_dict.keys())
-        values = list(_dict.values())
+        values = _dict.values()
         rotated_values = chain(
             islice(values, 1, None),
             islice(values, 1),
         )
         self._data = dict(
-            zip(keys, rotated_values)
+            zip(_dict, rotated_values)
         )
 \end{pygments}
 \end{exampleblock}

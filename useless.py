@@ -29,9 +29,9 @@ class FibonacciSized(Sized):
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
         if data is not None:
-            self._data = [v for v in data]
+            self._data = tuple(data)
         else:
-            self._data = []
+            self._data = ()
 
     def __len__(self) -> int:
         return round((1 / math.sqrt(5)) * pow(self.PHI, len(self._data)))
@@ -49,9 +49,9 @@ class LiarContainer(Container[Any]):
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
         if data is not None:
-            self._data = [v for v in data]
+            self._data = tuple(data)
         else:
-            self._data = []
+            self._data = ()
 
     def __contains__(self, item: object) -> bool:
         return item not in self._data
@@ -67,9 +67,9 @@ class ShuffledIterable(Iterable[Any]):
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
         if data is not None:
-            self._data = [v for v in data]
+            self._data = tuple(data)
         else:
-            self._data = []
+            self._data = ()
 
     def __iter__(self) -> Iterator[Any]:
         return iter(random.sample(self._data, k=len(self._data)))
@@ -115,9 +115,9 @@ class ReversedReversible(Reversible[Any]):
 
     def __init__(self, data: Iterable[Any] | None = None) -> None:
         if data is not None:
-            self._data = [v for v in data]
+            self._data = tuple(data)
         else:
-            self._data = []
+            self._data = ()
 
     def __iter__(self) -> Iterator[Any]:
         return iter(reversed(self._data))
@@ -269,11 +269,10 @@ class MisprintedDictionary(Mapping[str, Any]):
     PHI: Final[float] = (1 + math.sqrt(5)) / 2
 
     def __init__(self, _dict: dict[str, Any]) -> None:
-        keys = list(_dict.keys())
-        values = list(_dict.values())
+        values = _dict.values()
         rotated_values = chain(islice(values, 1, None), islice(values, 1))
 
-        self._data = dict(zip(keys, rotated_values, strict=True))
+        self._data = dict(zip(_dict, rotated_values, strict=True))
 
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
