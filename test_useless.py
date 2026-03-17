@@ -53,14 +53,14 @@ class TestShuffledIterable:
 
 
 class TestEmptyIterable:
-    @given(data=st.integers() | st.text() | st.none())
+    @given(data=st.lists(st.integers() | st.text() | st.none()))
     def test_iter(self, data: object) -> None:
         obj = EmptyIterable(data)  # type: ignore[arg-type]
         assert list(obj) == []
 
 
 class TestFixedIterable:
-    @given(data=st.integers() | st.text() | st.none())
+    @given(data=st.lists(st.integers() | st.text() | st.none()))
     def test_iter(self, data: object) -> None:
         obj = FixedIterable(data)  # type: ignore[arg-type]
         assert list(obj) == ["Do NOT iterate me !"]
