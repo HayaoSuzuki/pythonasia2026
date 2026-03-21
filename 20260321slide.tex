@@ -1,4 +1,4 @@
-\documentclass[aspectratio=169,dvipdfmx,11pt,notheorems]{beamer}
+\documentclass[aspectratio=169,dvipdfmx,12pt,notheorems]{beamer}
 %%%% 和文用 %%%%%
 \usepackage{bxdpx-beamer}
 \usepackage{pxjahyper}
@@ -177,7 +177,7 @@ Listed at  \url{https://xaro.hatenablog.jp/}
 \begin{frame}\frametitle{Today's Theme}
 
 \begin{center}
-\huge{Let's implement \structure{useless} Python objects}
+\LARGE{Let's implement \structure{useless} Python objects}
 \end{center}
 %\includemedia[
 %  addresource=voice/slide05.wav,
@@ -364,7 +364,7 @@ class FibonacciSized(Sized):
 
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{\texttt{for} and \texttt{Iterable}}
+\begin{frame}[fragile,shrink=4]\frametitle{\texttt{for} and \texttt{Iterable}}
 
 \begin{block}{\texttt{object.\_\_iter\_\_()}}
 Called when an iterator is required for a container. 
@@ -479,7 +479,7 @@ ABC  & built-in objects \\
 
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{\texttt{Sequence}}
+\begin{frame}[fragile,shrink=4]\frametitle{\texttt{Sequence}}
 
 \begin{exampleblock}{Example: \texttt{ModularSequence}}
 \begin{pygments}{python}

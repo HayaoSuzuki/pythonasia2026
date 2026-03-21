@@ -100,7 +100,15 @@ Let me show you a quote. This is from Zhuangzi（ジュアンズィー）, an an
 
 [Pause]
 
-The quote says:
+The quote is ancient Chinese text.
+
+So I will read this text as Japanese.
+
+人は皆有用の用を知るも、無用の用を知る莫きなり
+
+Japanese has a special method by which ancient Chinese texts are read as Japanese.
+
+In English, 
 
 "Everyone knows the usefulness of the useful, but no one knows the usefulness of the useless."
 
