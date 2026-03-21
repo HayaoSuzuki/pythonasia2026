@@ -34,6 +34,8 @@ Let me introduce myself quickly.
 
 My name is Hayao Suzuki. You can find me on X as follows.
 
+I play the tuba.
+
 I work as a software engineer at Tokyo Gas. Tokyo Gas is the largest natural gas company in Japan. We provide city gas, LNG, and electricity.
 
 ---
@@ -94,7 +96,7 @@ But wait. Is "useless" really useless?
 
 [Pause]
 
-Let me show you a quote. This is from Zhuangzi, an ancient Chinese philosopher. He lived about 2,300 years ago.
+Let me show you a quote. This is from Zhuangzi（ジュアンズィー）, an ancient Chinese philosopher. He lived about 2,300 years ago.
 
 [Pause]
 
@@ -300,7 +302,7 @@ So now we have three basic useless objects. Each one breaks one operation. Let's
 [//]: # ()
 [//]: # (So the "reversed" version is actually the correct one. The normal way is broken, but reversing it fixes everything.)
 [//]: # ()
-[//]: # (This connects to Zhuangzi's idea. Sometimes the "wrong" way is the right way.)
+[//]: # (This connects to Zhuangzi（ジュアンズィー）'s idea. Sometimes the "wrong" way is the right way.)
 
 ---
 
@@ -401,25 +403,21 @@ This is a great example of an unexpected side effect.
 
 ## Slide 25: Sequence - CompetitionSequence code (22:10 - 22:50) ~40s
 
-Next is CompetitionSequence. It also inherits from Sequence.
+Remember ModularSequence? It only defined `__getitem__` — no `__iter__`. Python used `__getitem__` as a fallback for iteration, calling index 0, 1, 2, and so on. That is why `count()` ran forever.
 
-This one is interesting. `__getitem__` returns items in the normal order. So indexing works as expected.
+Now look at CompetitionSequence. It defines **both** `__getitem__` and `__iter__`. `__getitem__` returns items in normal order, but `__iter__` returns them in **reversed** order.
 
-But `__iter__` returns items in **reversed** order. So when you loop with `for`, you get everything backwards.
-
-It's like a competition where the last place finisher is announced first.
+When both exist, which one does a `for` loop use?
 
 ---
 
 ## Slide 26: Sequence - CompetitionSequence demo (22:50 - 23:30) ~40s
 
-Let me show you.
+Let's see. `s[0]` gives 'a' — that's `__getitem__`, normal order.
 
-You create it with "abcdefg". Indexing with `s[0]` gives 'a' — that's correct.
+But `list(s)` gives ['g', 'f', 'e', 'd', 'c', 'b', 'a']. Reversed! Because `list()` iterates, and iteration uses `__iter__`, not `__getitem__`.
 
-But `list(s)` gives ['g', 'f', 'e', 'd', 'c', 'b', 'a']. Completely reversed!
-
-And `len(s)` returns 7 — the real length. So it looks normal... until you iterate.
+So ModularSequence had no `__iter__`, and Python fell back to `__getitem__`. CompetitionSequence has both, and Python chose `__iter__`. When `__iter__` is defined, it always wins.
 
 ---
 
@@ -518,7 +516,7 @@ Three things to remember.
 
 [Long Pause]
 
-Remember the Zhuangzi quote:
+Remember the Zhuangzi（ジュアンズィー） quote:
 
 "Everyone knows the usefulness of the useful, but no one knows the usefulness of the useless."
 
