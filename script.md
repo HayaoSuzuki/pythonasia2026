@@ -469,14 +469,6 @@ Instead of checking `self._data` less than or equal to `other._data`, it checks 
 
 The comparison is reversed! Bigger sets are "less than" smaller sets.
 
----
-
-## Slide 30: Set - CrowdSet code 2 (25:50 - 26:30) ~40s
-
-CrowdSet has more tricks.
-
-`__len__` returns the square of the real size. So a set with 3 items says it has 9.
-
 And the set operations are swapped: `__and__` — the intersection operator — actually computes the **union**. And `__or__` — the union operator — computes the **intersection**.
 
 Everything is reversed. It's crowd mentality — the opposite of what you expect.
@@ -491,8 +483,6 @@ Here is the result.
 `t` has 2 unique items: "egg" and "spam." Remember, sets remove duplicates.
 
 `s > t` returns True. With CrowdSet's reversed logic, this means s has **more** elements.
-
-`len(s)` returns 9 — that's 3 squared.
 
 `s & t` — which should be the intersection — returns all 3 items. It computed the union instead!
 

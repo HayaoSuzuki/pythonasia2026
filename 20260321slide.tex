@@ -591,27 +591,9 @@ class MisprintedDictionary(Mapping):
 \begin{pygments}{python}
 @functools.total_ordering
 class CrowdSet(Set):
-    def __init__(self, data=None):
-        if data is not None:
-            self._data = set(data)
-        else:
-            self._data = set()
-
     def __lt__(self, other):
         return self._data >= other._data
-\end{pygments}
-\end{exampleblock}
-
-\end{frame}
-
-\begin{frame}[fragile]\frametitle{\texttt{Set}}
-
-\begin{exampleblock}{Example: \texttt{CrowdSet}}
-\begin{pygments}{python}
-class CrowdSet(Set):
-    def __len__(self):
-        return len(self._data) ** 2
-
+        
     def __and__(self, other):
         return CrowdSet(self._data | other._data)
 
@@ -630,8 +612,6 @@ class CrowdSet(Set):
 >>> t = CrowdSet(("egg", "egg", "spam", "spam"))
 >>> s > t
 True
->>> len(s)
-9
 >>> sorted(s & t)
 ['bacon', 'egg', 'spam']
 >>> sorted(s | t)
